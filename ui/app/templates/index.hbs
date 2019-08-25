@@ -1,0 +1,12 @@
+<div class="jumbotron">
+  <h1 class="display-4">Hello, my dear wife, love of my life!</h1>
+  <p class="lead">I created this app for you to manage your passwords.</p>
+  <hr class="my-4">
+  <p>I love you.</p>
+  <p class="lead">
+    {{#unless session.isAuthenticated}}
+      {{ link-to "Sign In" "signin" class="btn btn-primary btn-lg" role="button" }}
+      {{!-- {{ link-to "Sign out" "invalidateSession" class="nav-link" }} --}}
+    {{/unless}}       
+  </p>
+</div>

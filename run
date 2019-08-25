@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd api
+
+export STAGE=${1}
+
+refresh run -c ./config.yml

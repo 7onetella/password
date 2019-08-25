@@ -1,0 +1,13 @@
+refresh.yml
+api
+api_linux_arm
+api_linux_amd64
+passwords.bleve
+*.nomad.*
+*.out
+ui/*
+bindata.go
+keepass-crt.pem
+keepass-key.pem
+.password_secrets
+dist

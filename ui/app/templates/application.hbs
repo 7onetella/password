@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" >
+  {{ link-to "Home" "index" class="navbar-brand" }}
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+      </li>
+      {{#if session.isAuthenticated}}
+        <li class="nav-item">
+          {{ link-to "Passwords" "passwords" class="nav-link" }}
+        </li>
+        <li class="nav-item">
+          {{ link-to "New" "passwords/new" class="nav-link" }}
+        </li>
+      {{/if}}
+      <li class="nav-item">
+        {{ link-to "About" "about" class="nav-link" }}
+      </li>
+      {{#if session.isAuthenticated}}
+        <li>
+          <a href="#" {{ action "invalidateSession" preventDefault=false}} class="nav-link">Sign out</a>
+          {{!-- {{ link-to "Sign out" "invalidateSession" class="nav-link" }} --}}
+        </li>
+      {{else}}    
+        <li class="nav-item">
+          {{ link-to "Sign in" "signin" class="nav-link" }}
+        </li>
+      {{/if}}        
+    </ul>
+  </div>
+</nav>
+
+<br>
+
+<div class="container">
+  {{outlet}}
+</div>
+
+{{#if showDebugInfo}}
+  <hr>
+  <p>Config:</p>
+  <pre>{{config}}</pre>
+
+  <p>Session Data:</p>
+  <pre>{{sessionData}}</pre>
+{{/if}}

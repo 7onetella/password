@@ -1,0 +1,60 @@
+@import "ember-cli-bootstrap-4/bootstrap";
+
+/* app.scss custom css */
+#signindiv, #signinalertdiv {
+    width: 18rem;
+}
+
+#aboutdiv {
+    width: 18rem;
+}
+
+td.clickable {
+    cursor: pointer;
+}
+
+#flashmessagep {
+    margin-bottom: 0;
+}
+
+#passwordlisttable {
+    margin-top: 1rem;
+}
+
+.doc-section {
+    width: 260px;
+    // border: 1px solid #cccccc;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    // box-shadow: 1px 1px 4px 2px #ccc;
+    // -moz-box-shadow: 1px 1px 4px 2px #ccc;
+    // -webkit-box-shadow: 1px 1px 4px 2px #ccc;
+    margin: auto;
+  
+    &__header {
+      font-weight: bold;
+    }
+  
+    &__header-title {
+      padding: 5px;
+    }
+}
+
+.alert {
+	animation: fadeIn 1s ease;
+	-moz-animation: fadeIn 1s ease;
+	-webkit-animation: fadeIn 1s ease;
+	border-style: solid;
+	border-width: 0 0 1px;
+	border-radius: 0px 0px 0 0;
+	-moz-border-radius: 0px 0px 0 0;
+	-webkit-border-radius: 0px 0px 0 0;
+	font-size: 16px;
+    margin: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+	position: absolute;
+}
