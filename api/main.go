@@ -47,10 +47,10 @@ func PasswordGetRequestHandler(w http.ResponseWriter, req *http.Request) {
 		"size": 20,
 		"next": ""
 	}
-}	
-	`
-
+}`
 	w.Header()
 
 	w.Write([]byte(json))
+
+	w.Header().Add("Content-Type", "application/json")
 }
