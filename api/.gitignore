@@ -1,1 +1,5 @@
 api
+api_linux_arm
+passwords.bleve
+*.nomad.*
+*.out

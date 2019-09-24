@@ -4,8 +4,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
-                sh label: 'build', script: 'execute.sh build'
+                sh label: 'Build',      script: './execute.sh build'
+                sh label: 'Dev Deploy', script: './execute.sh deploy'
             }
         }
         stage('Test') {
@@ -13,9 +13,9 @@ pipeline {
                 echo 'Testing..'
             }
         }
-        stage('Deploy') {
+        stage('Release') {
             steps {
-                echo 'Deploying....'
+                sh label: 'Releasing', script: './execute.sh release'
             }
         }
     }

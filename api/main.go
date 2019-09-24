@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -8,15 +9,27 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var httpPort string
+var host string
+
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/password/api/scott", PasswordGetRequestHandler)
+
+	r.Path("/api/password").Methods("POST").HandlerFunc(CreatePasswordRequestHandler)
+	r.Path("/api/password/{id}").Methods("GET").HandlerFunc(ReadPasswordRequestHandler)
+	r.Path("/api/password").Methods("PUT").HandlerFunc(UpdatePasswordRequestHandler)
+	r.Path("/api/password/{id}").Methods("DELETE").HandlerFunc(DeletePasswordRequestHandler)
+	r.Path("/api/list").Queries("title", "{title}").Queries("token", "{token}").Queries("ptoken", "{ptoken}").HandlerFunc(ListPasswordsRequestHandler)
+	r.Path("/api/list").Methods("GET").HandlerFunc(ListPasswordsRequestHandler)
+
+	r.Path("/api/health").Methods("GET").HandlerFunc(HealthCheckHandler)
+	r.Path("/api/version").Methods("GET").HandlerFunc(VersionHandler)
 	http.Handle("/", r)
 
-	log.Println("starting password")
+	log.Println("starting server on port " + httpPort)
 
 	srv := &http.Server{
-		Addr: "0.0.0.0:8088",
+		Addr: fmt.Sprintf("0.0.0.0:%s", httpPort),
 		// Good practice to set timeouts to avoid Slowloris attacks.
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,
@@ -25,32 +38,4 @@ func main() {
 	}
 
 	log.Fatal(srv.ListenAndServe())
-}
-
-// PasswordGetRequestHandler retrieves password
-func PasswordGetRequestHandler(w http.ResponseWriter, req *http.Request) {
-	json := `
-{
-	"items": [
-		{
-			"url"         : "http://example.com",
-			"username"    : "user-foo",
-			"password"    : "1234",
-			"description" : "Bank of Example",
-			"tags": ["example", "bank"]
-		}
-	],
-	"metadata": {
-		"count": 20,
-		"more": true,
-		"page": 0,
-		"size": 20,
-		"next": ""
-	}
-}`
-	w.Header()
-
-	w.Write([]byte(json))
-
-	w.Header().Add("Content-Type", "application/json")
 }
