@@ -21,6 +21,11 @@
 package cmd
 
 import (
+	"os"
+	"strings"
+
+	"github.com/olekukonko/tablewriter"
+
 	"github.com/7onetella/password/api/client"
 	"github.com/7onetella/password/api/model"
 	"github.com/spf13/cobra"
@@ -38,19 +43,19 @@ var listCmd = &cobra.Command{
 		ExitOnError(err, "initializing client")
 
 		input := model.ListPasswordsInput{}
+		input.Title = args[0]
 		response, err := svc.ListPasswords(input)
 		ExitOnError(err, "listing password")
 
 		Success("listing password")
 
-		token := response.Metadata.Token
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetHeader([]string{"ID", "Title", "Username", "Notes", "Tags"})
 
-		//Println(password.URL)
-		//Println(password.Title)
-		//Println(password.Username)
-		//Println(password.Password)
-		//Println(password.Notes)
-		//Println(strings.Join(password.Tags, ","))
+		for _, p := range response.Items {
+			table.Append([]string{p.ID, p.Title, p.Username, p.Notes, strings.Join(p.Tags, ",")})
+		}
+		table.Render()
 	},
 }
 
