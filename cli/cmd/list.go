@@ -50,10 +50,10 @@ var listCmd = &cobra.Command{
 		Success("listing password")
 
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"ID", "Title", "Username", "Notes", "Tags"})
+		table.SetHeader([]string{"Title", "Username", "Notes", "Tags"})
 
 		for _, p := range response.Items {
-			table.Append([]string{p.ID, p.Title, p.Username, p.Notes, strings.Join(p.Tags, ",")})
+			table.Append([]string{p.Title, p.Username, p.Notes, strings.Join(p.Tags, ",")})
 		}
 		table.Render()
 	},
