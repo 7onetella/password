@@ -31,7 +31,7 @@ func NewPasswordService() (*PasswordService, error) {
 // CreatePassword creates password
 func (ps *PasswordService) CreatePassword(p model.Password) (*model.CreatePasswordOutput, error) {
 
-	url := fmt.Sprintf("http://%s/api/password", ps.serverAddr)
+	url := fmt.Sprintf("http://%s/api/passwords", ps.serverAddr)
 
 	response := &model.CreatePasswordOutput{}
 	b, err := json.Marshal(p)
@@ -55,7 +55,7 @@ func (ps *PasswordService) CreatePassword(p model.Password) (*model.CreatePasswo
 // ReadPassword creates password
 func (ps *PasswordService) ReadPassword(ID string) (*model.Password, error) {
 
-	url := fmt.Sprintf("http://%s/api/password/%s", ps.serverAddr, ID)
+	url := fmt.Sprintf("http://%s/api/passwords/%s", ps.serverAddr, ID)
 
 	response := &model.Password{}
 
@@ -75,14 +75,14 @@ func (ps *PasswordService) ReadPassword(ID string) (*model.Password, error) {
 // UpdatePassword updates password
 func (ps *PasswordService) UpdatePassword(p model.Password) error {
 
-	url := fmt.Sprintf("http://%s/api/password", ps.serverAddr)
+	url := fmt.Sprintf("http://%s/api/passwords", ps.serverAddr)
 
 	b, err := json.Marshal(p)
 	if err != nil {
 		return err
 	}
 
-	_, err = doPut(url, b)
+	_, err = doPatch(url, b)
 	if err != nil {
 		return err
 	}
@@ -93,7 +93,7 @@ func (ps *PasswordService) UpdatePassword(p model.Password) error {
 // DeletePassword deletes password
 func (ps *PasswordService) DeletePassword(ID string) error {
 
-	url := fmt.Sprintf("http://%s/api/password/%s", ps.serverAddr, ID)
+	url := fmt.Sprintf("http://%s/api/passwords/%s", ps.serverAddr, ID)
 
 	_, err := doDelete(url)
 	if err != nil {
@@ -135,6 +135,11 @@ func doPost(url string, b []byte) ([]byte, error) {
 func doPut(url string, b []byte) ([]byte, error) {
 	r := bytes.NewBuffer(b)
 	return doHTTPAction("PUT", url, r)
+}
+
+func doPatch(url string, b []byte) ([]byte, error) {
+	r := bytes.NewBuffer(b)
+	return doHTTPAction("PATCH", url, r)
 }
 
 func doDelete(url string) ([]byte, error) {

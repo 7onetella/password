@@ -1,14 +1,31 @@
 package model
 
+import (
+	"encoding/json"
+)
+
 // Password password record in search list
 type Password struct {
-	ID       string   `json:"id"`
+	ID       string   `json:"-"`
 	Title    string   `json:"title"`
 	URL      string   `json:"url"`
 	Username string   `json:"username"`
 	Password string   `json:"password"`
 	Notes    string   `json:"notes"`
 	Tags     []string `json:"tags"`
+}
+
+func (p *Password) MarshalJSON() ([]byte, error) {
+	type PasswordAlias Password
+	return json.Marshal(&struct {
+		Type       string         `json:"type"`
+		ID         string         `json:"id"`
+		Attributes *PasswordAlias `json:"attributes"`
+	}{
+		Type:       "passwords",
+		ID:         p.ID,
+		Attributes: (*PasswordAlias)(p),
+	})
 }
 
 // Metadata meta data in search list
@@ -30,7 +47,7 @@ type ListPasswordsInput struct {
 
 // ListPasswordsOutput list passwords output
 type ListPasswordsOutput struct {
-	Items    []Password `json:"items"`
+	Items    []Password `json:"data"`
 	Metadata Metadata   `json:"metadata"`
 	Token    string     `json:"token"`
 }

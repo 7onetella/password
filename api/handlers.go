@@ -115,6 +115,7 @@ func ReadPasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 func ListPasswordsRequestHandler(w http.ResponseWriter, req *http.Request) {
 	uuid := getUUID()
 
+	addCORSHeader(w)
 	w.Header().Add("Content-Type", "application/json")
 	// vars := mux.Vars(req)
 	title := req.FormValue("title")
@@ -146,6 +147,18 @@ func ListPasswordsRequestHandler(w http.ResponseWriter, req *http.Request) {
 
 	w.Write(data)
 
+}
+
+func addCORSHeader(w http.ResponseWriter) {
+	w.Header().Add("Access-Control-Allow-Origin", "*")
+}
+
+// PreflightOptionsHandler handles preflight OPTIONS
+func PreflightOptionsHandler(w http.ResponseWriter, req *http.Request) {
+	w.Header().Add("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Allow-Methods", "GET, OPTIONS, HEAD, POST, PUT, PATCH, DELETE")
+	w.Header().Add("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	w.WriteHeader(http.StatusAccepted)
 }
 
 func paginate(passwords []model.Password, path, token, ptoken string, size int) model.ListPasswordsOutput {

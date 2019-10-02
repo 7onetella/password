@@ -15,10 +15,13 @@ var host string
 func main() {
 	r := mux.NewRouter()
 
-	r.Path("/api/password").Methods("POST").HandlerFunc(CreatePasswordRequestHandler)
-	r.Path("/api/password/{id}").Methods("GET").HandlerFunc(ReadPasswordRequestHandler)
-	r.Path("/api/password").Methods("PUT").HandlerFunc(UpdatePasswordRequestHandler)
-	r.Path("/api/password/{id}").Methods("DELETE").HandlerFunc(DeletePasswordRequestHandler)
+	r.Methods("OPTIONS").HandlerFunc(PreflightOptionsHandler)
+
+	r.Path("/api/passwords").Methods("POST").HandlerFunc(CreatePasswordRequestHandler)
+	r.Path("/api/passwords/{id}").Methods("GET").HandlerFunc(ReadPasswordRequestHandler)
+	r.Path("/api/passwords").Methods("PATCH").HandlerFunc(UpdatePasswordRequestHandler)
+	r.Path("/api/passwords/{id}").Methods("DELETE").HandlerFunc(DeletePasswordRequestHandler)
+	r.Path("/api/passwords").Methods("GET").HandlerFunc(ListPasswordsRequestHandler)
 	r.Path("/api/list").Queries("title", "{title}").Queries("token", "{token}").Queries("ptoken", "{ptoken}").HandlerFunc(ListPasswordsRequestHandler)
 	r.Path("/api/list").Methods("GET").HandlerFunc(ListPasswordsRequestHandler)
 
