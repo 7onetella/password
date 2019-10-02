@@ -12,6 +12,8 @@ import (
 const jsonprefix = "                "
 
 func TestCreatePassword(t *testing.T) {
+	DeleteAllPasswords()
+
 	spec := GSpec{t}
 
 	p := newPassword()
@@ -166,7 +168,7 @@ func TestFindPasswordsByTitle(t *testing.T) {
 
 	spec.AssertAndFailNow(err == nil, "result should not return error", err)
 
-	spec.AssertAndFailNow(len(passwords) > 1, "result should return at least 1 record", len(passwords))
+	spec.AssertAndFailNow(len(passwords) > 0, "result should return at least 1 record", len(passwords))
 }
 
 func newPassword() model.Password {

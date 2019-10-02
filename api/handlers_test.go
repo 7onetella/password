@@ -111,6 +111,7 @@ func TestDeletePasswordRequest(t *testing.T) {
 }
 
 func TestListPasswordsRequest(t *testing.T) {
+	DeleteAllPasswords()
 
 	spec := GSpec{t}
 
