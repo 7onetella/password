@@ -22,6 +22,7 @@ require (
 	github.com/couchbase/ghistogram v0.0.0 // indirect
 	github.com/couchbase/moss v0.0.0-20190322010551-a0cae174c498 // indirect
 	github.com/couchbase/vellum v0.0.0-20190829182332-ef2e028c01fd // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/elazarl/go-bindata-assetfs v1.0.0 // indirect
 	github.com/etcd-io/bbolt v1.3.3 // indirect
 	github.com/fatih/color v1.7.0 // indirect
@@ -33,12 +34,17 @@ require (
 	github.com/google/pprof v0.0.0-20190908185732-236ed259b199 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/gopherjs/gopherjs v0.0.0-20190915194858-d3ddacdb130f // indirect
+	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/mux v1.7.3
+	github.com/gorilla/sessions v1.2.0 // indirect
 	github.com/gorilla/websocket v1.4.1 // indirect
+	github.com/gosimple/slug v1.7.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.1.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.11.2 // indirect
 	github.com/hashicorp/go-version v1.2.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.3 // indirect
+	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a // indirect
+	github.com/jinzhu/gorm v1.9.11 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/kr/pty v1.1.8 // indirect
 	github.com/lib/pq v1.2.0
@@ -46,6 +52,7 @@ require (
 	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/mattn/go-isatty v0.0.9 // indirect
 	github.com/mattn/go-runewidth v0.0.4 // indirect
+	github.com/microcosm-cc/bluemonday v1.0.2 // indirect
 	github.com/mitchellh/gox v1.0.1 // indirect
 	github.com/mwitkow/go-conntrack v0.0.0-20190716064945-2f068394615f // indirect
 	github.com/olekukonko/tablewriter v0.0.1 // indirect
@@ -56,6 +63,16 @@ require (
 	github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4 // indirect
 	github.com/prometheus/common v0.7.0 // indirect
 	github.com/prometheus/procfs v0.0.5 // indirect
+	github.com/qor/assetfs v0.0.0-20170713023933-ff57fdc13a14 // indirect
+	github.com/qor/auth v0.0.0-20190603071357-709ba0ce943b // indirect
+	github.com/qor/mailer v0.0.0-20180329083248-0555e49f99ac // indirect
+	github.com/qor/middlewares v0.0.0-20170822143614-781378b69454 // indirect
+	github.com/qor/qor v0.0.0-20190319081902-186b0237364b // indirect
+	github.com/qor/redirect_back v0.0.0-20170907030740-b4161ed6f848 // indirect
+	github.com/qor/render v1.1.1 // indirect
+	github.com/qor/responder v0.0.0-20171031032654-b6def473574f // indirect
+	github.com/qor/session v0.0.0-20170907035918-8206b0adab70 // indirect
+	github.com/rainycape/unidecode v0.0.0-20150907023854-cb7f23ec59be // indirect
 	github.com/rogpeppe/fastuuid v1.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.3.2 // indirect
 	github.com/russross/blackfriday v2.0.0+incompatible // indirect

@@ -15,6 +15,8 @@ type Password struct {
 	Tags     []string `json:"tags"`
 }
 
+// http://choly.ca/post/go-json-marshalling/
+
 func (p *Password) MarshalJSON() ([]byte, error) {
 	type PasswordAlias Password
 	return json.Marshal(&struct {
