@@ -68,14 +68,16 @@ func TestUpdatePasswordRequest(t *testing.T) {
 
 	spec := GSpec{t}
 
-	p := newPassword()
-
-	spec.Given(prettyJSON(p), "username="+p.Username)
-
 	svc, err := client.NewPasswordService()
 	if err != nil {
 		t.Errorf("creating serivce failed: %v", err)
 	}
+
+	p := newPassword()
+	createResponse, err := svc.CreatePassword(p)
+	p.ID = createResponse.ID
+
+	spec.Given(prettyJSON(p), "username="+p.Username)
 
 	spec.When("svc.UpdatePassword")
 

@@ -15,7 +15,7 @@ type IDClaims struct {
 	jwt.StandardClaims
 }
 
-// SignJwt signs id
+// EncodeID signs id
 func EncodeID(id string) (string, error) {
 	claim := IDClaims{
 		ID: id,

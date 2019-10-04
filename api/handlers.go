@@ -238,7 +238,7 @@ func UpdatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	log.Println(rid, "received:", password, "id:", rid)
+	log.Println(rid, "received:", password, "rid:", rid)
 
 	w.WriteHeader(http.StatusNoContent)
 }

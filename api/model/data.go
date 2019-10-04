@@ -17,6 +17,7 @@ type Password struct {
 
 // http://choly.ca/post/go-json-marshalling/
 
+// MarshalJSON marshals json
 func (p *Password) MarshalJSON() ([]byte, error) {
 	type PasswordAlias Password
 	return json.Marshal(&struct {
@@ -28,6 +29,25 @@ func (p *Password) MarshalJSON() ([]byte, error) {
 		ID:         p.ID,
 		Attributes: (*PasswordAlias)(p),
 	})
+}
+
+// UnmarshalJSON unmarshals json
+func (p *Password) UnmarshalJSON(data []byte) error {
+	type PasswordAlias Password
+	aux := &struct {
+		Type       string         `json:"type"`
+		ID         string         `json:"id"`
+		Attributes *PasswordAlias `json:"attributes"`
+	}{
+		Attributes: (*PasswordAlias)(p),
+	}
+
+	if err := json.Unmarshal(data, aux); err != nil {
+		return err
+	}
+	p.ID = aux.ID
+
+	return nil
 }
 
 // Metadata meta data in search list

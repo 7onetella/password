@@ -28,126 +28,102 @@ func NewPasswordService() (*PasswordService, error) {
 	return &PasswordService{serverAddr: serverAddr}, nil
 }
 
+// RestfulService restful service
+type RestfulService interface {
+	GetEndpoint() string
+}
+
+// GetEndpoint returns endpoint base url
+func (ps *PasswordService) GetEndpoint() string {
+	return fmt.Sprintf("http://%s/api/passwords", ps.serverAddr)
+}
+
+// CallEndpoint calls endpoint
+func CallEndpoint(url, method string, v interface{}, o interface{}) (interface{}, error) {
+	data, err := httpAction(url, method, v)
+	if err != nil {
+		return nil, err
+	}
+
+	if o != nil {
+		err = json.Unmarshal(data, o)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return o, nil
+}
+
 // CreatePassword creates password
 func (ps *PasswordService) CreatePassword(p model.Password) (*model.CreatePasswordOutput, error) {
-
-	url := fmt.Sprintf("http://%s/api/passwords", ps.serverAddr)
-
-	response := &model.CreatePasswordOutput{}
-	b, err := json.Marshal(p)
+	o, err := CallEndpoint(ps.GetEndpoint(), "POST", &p, &model.CreatePasswordOutput{})
 	if err != nil {
 		return nil, err
 	}
 
-	data, err := doPost(url, b)
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(data, response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
+	return o.(*model.CreatePasswordOutput), nil
 }
 
 // ReadPassword creates password
 func (ps *PasswordService) ReadPassword(ID string) (*model.Password, error) {
 
-	url := fmt.Sprintf("http://%s/api/passwords/%s", ps.serverAddr, ID)
-
-	response := &model.Password{}
-
-	data, err := doGet(url)
+	o, err := CallEndpoint(ps.GetEndpoint()+"/"+ID, "GET", nil, &model.Password{})
 	if err != nil {
 		return nil, err
 	}
 
-	err = json.Unmarshal(data, response)
-	if err != nil {
-		return nil, err
-	}
+	return o.(*model.Password), nil
 
-	return response, nil
 }
 
 // UpdatePassword updates password
 func (ps *PasswordService) UpdatePassword(p model.Password) error {
 
-	url := fmt.Sprintf("http://%s/api/passwords", ps.serverAddr)
-
-	b, err := json.Marshal(p)
-	if err != nil {
-		return err
-	}
-
-	_, err = doPatch(url, b)
+	_, err := CallEndpoint(ps.GetEndpoint(), "PATCH", &p, nil)
 	if err != nil {
 		return err
 	}
 
 	return nil
+
 }
 
 // DeletePassword deletes password
 func (ps *PasswordService) DeletePassword(ID string) error {
 
-	url := fmt.Sprintf("http://%s/api/passwords/%s", ps.serverAddr, ID)
-
-	_, err := doDelete(url)
+	_, err := CallEndpoint(ps.GetEndpoint()+"/"+ID, "DELETE", nil, nil)
 	if err != nil {
 		return err
 	}
 
 	return nil
+
 }
 
 // ListPasswords finds passwords by title
 func (ps *PasswordService) ListPasswords(input model.ListPasswordsInput) (*model.ListPasswordsOutput, error) {
 
-	url := fmt.Sprintf("http://%s/api/list?title=%s", ps.serverAddr, input.Title)
-
-	response := &model.ListPasswordsOutput{}
-
-	data, err := doGet(url)
+	o, err := CallEndpoint(ps.GetEndpoint()+"?title="+input.Title, "GET", nil, &model.ListPasswordsOutput{})
 	if err != nil {
 		return nil, err
 	}
 
-	err = json.Unmarshal(data, response)
-	if err != nil {
-		return nil, err
+	return o.(*model.ListPasswordsOutput), nil
+
+}
+
+func httpAction(url, method string, v interface{}) ([]byte, error) {
+	var r io.Reader
+	if v != nil {
+		b, err := json.Marshal(v)
+		if err != nil {
+			return nil, err
+		}
+		r = bytes.NewReader(b)
 	}
 
-	return response, nil
-}
-
-func doGet(url string) ([]byte, error) {
-	return doHTTPAction("GET", url, nil)
-}
-
-func doPost(url string, b []byte) ([]byte, error) {
-	r := bytes.NewBuffer(b)
-	return doHTTPAction("POST", url, r)
-}
-
-func doPut(url string, b []byte) ([]byte, error) {
-	r := bytes.NewBuffer(b)
-	return doHTTPAction("PUT", url, r)
-}
-
-func doPatch(url string, b []byte) ([]byte, error) {
-	r := bytes.NewBuffer(b)
-	return doHTTPAction("PATCH", url, r)
-}
-
-func doDelete(url string) ([]byte, error) {
-	return doHTTPAction("DELETE", url, nil)
-}
-
-func doHTTPAction(action, url string, r io.Reader) ([]byte, error) {
-	req, err := http.NewRequest(action, url, r)
+	req, err := http.NewRequest(method, url, r)
 	if err != nil {
 		return nil, err
 	}
@@ -160,13 +136,4 @@ func doHTTPAction(action, url string, r io.Reader) ([]byte, error) {
 	body, err := ioutil.ReadAll(res.Body)
 
 	return body, err
-}
-
-func unmarshalPassword(data []byte) (*model.Password, error) {
-	password := &model.Password{}
-	err := json.Unmarshal(data, password)
-	if err != nil {
-		return nil, err
-	}
-	return password, nil
 }
