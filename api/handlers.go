@@ -149,6 +149,59 @@ func ListPasswordsRequestHandler(w http.ResponseWriter, req *http.Request) {
 
 }
 
+func AuthRequired(next func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
+		c, err := req.Cookie("token")
+		if err != nil {
+			if err == http.ErrNoCookie {
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		tokenString := c.Value
+
+		ID, err := DecodeToken(tokenString)
+		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		fmt.Println("Auth Token Decoded. ID: ", ID)
+
+		// allow access
+		next(w, req)
+	}
+}
+
+// SignRequestHandler signs user
+func SignRequestHandler(w http.ResponseWriter, req *http.Request) {
+	addCORSHeader(w)
+
+	w.Header().Add("Content-Type", "application/json")
+	username := req.FormValue("username")
+	password := req.FormValue("password")
+
+	if username == "admin" && password == "foobar" {
+		tokenString, expiration, err := EncodeID("id1234")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		fmt.Println("Sign-In successful dropping token cookie")
+		http.SetCookie(w, &http.Cookie{
+			Name:    "token",
+			Value:   tokenString,
+			Expires: expiration,
+		})
+	} else {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+}
+
 func addCORSHeader(w http.ResponseWriter) {
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 }
