@@ -70,7 +70,7 @@ type ListPasswordsInput struct {
 // ListPasswordsOutput list passwords output
 type ListPasswordsOutput struct {
 	Items    []Password `json:"data"`
-	Metadata Metadata   `json:"metadata"`
+	Metadata Metadata   `json:"links"`
 	Token    string     `json:"token"`
 }
 

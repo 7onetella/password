@@ -1,26 +1,26 @@
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed"
-      data-toggle="collapse" data-target="#menu-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      {{ link-to 'Home' 'index' class="navbar-brand" }}
-    </div>
-
-    <div class="collapse navbar-collapse" id="menu-collapse">
-      <ul class="nav navbar-nav">
-        <li><LinkTo @route="passwords">Passwords</LinkTo></li>  
-        <li><LinkTo @route="passwords/new">New</LinkTo></li>  
-        <li><LinkTo @route="about">About</LinkTo></li>
-      </ul>
-    </div>
-  </div>    
-  
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  {{ link-to "Home" "index" class="navbar-brand" }}
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+      </li>
+      <li class="nav-item">
+        {{ link-to "Passwords" "passwords" class="nav-link" }}
+      </li>
+      <li class="nav-item">
+        {{ link-to "New" "passwords/new" class="nav-link" }}
+      </li>
+      <li class="nav-item">
+        {{ link-to "About" "about" class="nav-link" }}
+      </li>
+    </ul>
+  </div>
 </nav>
+
+<br>
 
 <div class="container">
   {{outlet}}
