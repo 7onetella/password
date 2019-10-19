@@ -28,3 +28,11 @@ very good golang auth server with refresh endpoint
 https://www.sohamkamani.com/blog/golang/2019-01-01-jwt-authentication/
 
 https://colorlib.com/wp/free-bootstrap-registration-forms/
+
+api generator
+https://engineering.clever.com/2018/03/28/wag-go-web-api-generator/
+
+golang api server generator
+https://github.com/wantedly/apig
+
+

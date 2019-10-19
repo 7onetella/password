@@ -6,34 +6,14 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/7onetella/password/api/model"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
-
-// URLBase url base for next link
-var URLBase string
-
-// Version api version
-var Version string
-
-func init() {
-	httpPort = os.Getenv("HTTP_PORT")
-	if httpPort == "" {
-		httpPort = "9000"
-	}
-
-	host = os.Getenv("HOST")
-	if host == "" {
-		host = "localhost"
-	}
-
-	URLBase = fmt.Sprintf("http://%s:%s/api", host, httpPort)
-}
 
 // /password/api/username/scott?tags=bank,chase
 
@@ -124,6 +104,10 @@ func ListPasswordsRequestHandler(w http.ResponseWriter, req *http.Request) {
 	size, _ := strconv.Atoi(req.FormValue("size"))
 	if size == 0 {
 		size = 20
+	}
+
+	if title == "" {
+		title = "%"
 	}
 
 	log.Println("token:", token)
@@ -373,6 +357,21 @@ func resolveURL(endpointPrefix, token, ptoken string, size int) string {
 	}
 
 	return url
+}
+
+// DataCollectHanldr data collect handler
+func DataCollectHandler(w http.ResponseWriter, req *http.Request) {
+	addCORSHeader(w)
+	w.Header().Add("Content-Type", "application/json")
+
+	data := `{
+    "statusCode": 200,
+    "status": "success",
+    "errorMessage": null
+}
+`
+	time.Sleep(1 * time.Second)
+	w.Write([]byte(data))
 }
 
 // /api/list/bank,chase
