@@ -7,8 +7,11 @@ const Router = EmberRouter.extend({
 });
 
 Router.map(function() {
-  this.route('passwords');
+  this.route('passwords', function() {
+    this.route('edit');
+  });
   this.route('passwords/new');
+  this.route('passwords/edit', { path: '/passwords/edit/:id'});
   this.route('about');
 });
 

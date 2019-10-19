@@ -1,9 +1,9 @@
 import Controller from '@ember/controller';
 
 export default Controller.extend({
-    actions: {
-        savePassword() {
-            
-        }
+  actions: {
+    edit() {
+      console.log("controllers.edit");
     }
+  }
 });
