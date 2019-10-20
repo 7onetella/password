@@ -6,15 +6,12 @@ export default Route.extend({
     console.log("/routes/passwords.js mode()");
     console.log("  searchtext: " + searchtext);
 
-    return this.store.findAll('password'); 
-  },
-  actions: {
-    refreshRoute(searchtext) {
-      console.log("/routes/passwords.js refreshRoute()");
-      console.log("  searchtext: " + searchtext);
-
-      this.set('searchtext', searchtext);
-      this.refresh();
-    }
-  }  
+    this.store.query('password', {
+      filter: {
+        title: searchtext
+      }
+    }).then(function(passwords) {
+      return passwords
+    });
+  }
 });

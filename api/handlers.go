@@ -111,13 +111,15 @@ func ListPasswordsRequestHandler(w http.ResponseWriter, req *http.Request) {
 	addCORSHeader(w)
 	w.Header().Add("Content-Type", "application/json")
 	// vars := mux.Vars(req)
-	title := req.FormValue("title")
+	title := req.FormValue("filter[title]")
 	token := req.FormValue("token")
 	ptoken := req.FormValue("ptoken")
 	size, _ := strconv.Atoi(req.FormValue("size"))
 	if size == 0 {
 		size = 20
 	}
+
+	fmt.Println("title:", title)
 
 	if title == "" {
 		title = "%"

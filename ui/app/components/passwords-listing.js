@@ -19,11 +19,14 @@ export default Component.extend({
       var searchtext = this.get('searchtext');
       console.log("  searchtext: " + searchtext)
 
-      var records = this.get('store').findAll('password');
-
-      console.log("  records: "+records)
-
-      this.set('password', records)
+      var that = this
+      this.store.query('password', {
+        filter: {
+          title: searchtext
+        }
+      }).then(function(passwords) {
+        that.set('password', passwords)
+      });
     }    
   }
 });

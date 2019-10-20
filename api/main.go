@@ -41,7 +41,7 @@ func main() {
 	r.Path("/api/passwords/{id}").Methods("PATCH").HandlerFunc(UpdatePasswordRequestHandler)
 	r.Path("/api/passwords/{id}").Methods("DELETE").HandlerFunc(DeletePasswordRequestHandler)
 	r.Path("/api/passwords").Methods("GET").HandlerFunc(ListPasswordsRequestHandler)
-	r.Path("/api/passwords").Queries("title", "{title}").Queries("token", "{token}").Queries("ptoken", "{ptoken}").HandlerFunc(ListPasswordsRequestHandler)
+	r.Path("/api/passwords").Queries("filter[title]", "{title}").Queries("token", "{token}").Queries("ptoken", "{ptoken}").HandlerFunc(ListPasswordsRequestHandler)
 
 	r.Path("/api/health").Methods("GET").HandlerFunc(AuthRequired(HealthCheckHandler))
 	r.Path("/api/version").Methods("GET").HandlerFunc(VersionHandler)
