@@ -7,8 +7,9 @@ export default Component.extend({
   actions: {
     edit(password) {
       console.log("/components/passwords.js")
-      console.log("  id="+password.id);
+      console.log("  id: "+password.id);
 
-      this.get('router').transitionTo('/passwords/edit/' + password.id)    }
+      this.get('router').transitionTo('/passwords/edit/' + password.id)    
+    }
   }
 });
