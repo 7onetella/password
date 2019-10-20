@@ -13,6 +13,15 @@ export default Controller.extend({
       });
 
       this.get('router').transitionTo('/passwords')    
-    }
-  }
+    },
+    deletePassword(password) {
+      console.log("/controllers/passwords/edit.js");
+  
+      this.store.findRecord('password', password.id, { backgroundReload: false }).then(function(record) {
+        record.destroyRecord(); // => DELETE to '/passwords/id'
+      });
+  
+      this.get('router').transitionTo('/passwords')    
+    }  
+  },
 });

@@ -304,6 +304,8 @@ func UpdatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 
 // DeletePasswordRequestHandler deletes password by id
 func DeletePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
+	addCORSHeader(w)
+
 	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(req)
 
