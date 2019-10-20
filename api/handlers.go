@@ -181,7 +181,7 @@ func SignRequestHandler(w http.ResponseWriter, req *http.Request) {
 	username := req.FormValue("username")
 	password := req.FormValue("password")
 
-	if username == "admin" && password == "foobar" {
+	if username == "scott.seo@gmail.com" && password == "password" {
 		tokenString, expiration, err := EncodeID("id1234")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
