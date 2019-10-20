@@ -29,7 +29,9 @@ func errorMessageHandler(message string, statusCode int, w http.ResponseWriter) 
 
 // CreatePasswordRequestHandler handles creating of password request
 func CreatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
-	rid := getUUID()
+	//rid := getUUID()
+
+	addCORSHeader(w)
 
 	w.Header().Add("Content-Type", "application/json")
 	//vars := mux.Vars(req)
@@ -49,11 +51,17 @@ func CreatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	var response model.CreatePasswordOutput
-	response.ID = id
-	response.RID = rid
+	//	var response model.CreatePasswordOutput
+	//	response.ID = id
+	//	response.RID = rid
 
-	responseData, err := json.Marshal(response)
+	fmt.Println("id = ", id)
+
+	responseJson := model.GetPasswordOutput{}
+	responseJson.Item = jsonData.Item
+	responseJson.Item.ID = id
+
+	responseData, err := json.Marshal(&responseJson)
 	if err != nil {
 		errorMessageHandler("error while marshalling record", 500, w)
 		return
