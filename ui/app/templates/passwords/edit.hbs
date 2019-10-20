@@ -1,4 +1,29 @@
+<br>
 
-Passwords Edit Page
-
-{{ this.model.title }}
+<form>
+  <div class="form-group">
+    <label for="title">Title</label>
+    {{input type="text" class="form-control" value=this.model.title}}
+  </div>
+  <div class="form-group">
+    <label for="title">URL</label>
+    {{input type="text" class="form-control" value=this.model.url}}
+  </div>
+  <div class="form-group">
+    <label for="username">Username</label>
+    {{input type="text" class="form-control" value=this.model.username}}
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    {{input type="password" class="form-control" value=this.model.password}}
+  </div>
+  <div class="form-group">
+    <label for="notes">Notes</label>
+    {{input type="text" class="form-control" value=this.model.notes}}
+  </div>
+  <div class="form-group">
+    <label for="tags">Tags</label>
+    {{input type="text" class="form-control" value=this.model.tags}}
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>

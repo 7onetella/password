@@ -68,6 +68,7 @@ func CreatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 
 // ReadPasswordRequestHandler retrieves password by id
 func ReadPasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
+	addCORSHeader(w)
 	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(req)
 
@@ -82,7 +83,11 @@ func ReadPasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	data, err := json.Marshal(&password)
+	responseOutput := model.GetPasswordOutput{
+		Item: password,
+	}
+
+	data, err := json.Marshal(&responseOutput)
 	if err != nil {
 		errorMessageHandler("error while marshalling", 500, w)
 		return

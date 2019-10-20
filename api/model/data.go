@@ -67,6 +67,10 @@ type ListPasswordsInput struct {
 	Username string
 }
 
+type GetPasswordOutput struct {
+	Item Password `json:"data"`
+}
+
 // ListPasswordsOutput list passwords output
 type ListPasswordsOutput struct {
 	Items    []Password `json:"data"`

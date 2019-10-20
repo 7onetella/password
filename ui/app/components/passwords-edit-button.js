@@ -7,13 +7,10 @@ export default Component.extend({
   actions: {
     edit(password) {
       
-      console.log("components.passwords-edit-button id="+password.id);
+      console.log("/components/passwords-edit-button.js")
+      console.log("  id="+password.id);
 
-      this.get('router').transitionTo('/passwords/edit/:id', {
-        queryParams: {
-          id: password.id
-        }
-      })
+      this.get('router').transitionTo('/passwords/edit/' + password.id)
     }
   }
 });
