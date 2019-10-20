@@ -14,10 +14,17 @@ export default Controller.extend({
         username: $('input[name="username"]')[0].value,
         password: $('input[name="password"]')[0].value
       }).then(function() {
-        document.location = "/passwords";
-      }, function() {
-        this.set("loginFailed", true);
+        // console.log("signin successful")
+        // document.location = "/passwords";
+      }, function(data) {
+        console.log(data);
+        if (data.status == 200) {
+          document.location = "/passwords";
+        } else {
+          this.set("loginFailed", true);
+        }
       }.bind(this));
+
     }
   }
 });

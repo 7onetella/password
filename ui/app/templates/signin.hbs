@@ -1,3 +1,6 @@
+{{#if loginFailed}}
+  <div class="alert alert-danger" style="width: 18rem;">Invalid username or password.</div>
+{{/if}}
 <div class="card" style="width: 18rem;">
 <article class="card-body">
 	<h4 class="card-title text-center mb-4 mt-1">Sign in</h4>
@@ -27,7 +30,3 @@
 	</form>
 </article>
 </div>
-
-{{#if loginFailed}}
-  <div class="alert alert-danger">Invalid username or password.</div>
-{{/if}}
