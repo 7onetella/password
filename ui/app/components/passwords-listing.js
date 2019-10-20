@@ -6,16 +6,18 @@ export default Component.extend({
 
   actions: {
     edit(password) {
-      console.log("/components/passwords.js")
+      console.log("/components/passwords.js edit()")
       console.log("  id: "+password.id);
 
       this.get('router').transitionTo('/passwords/edit/' + password.id)    
     },
     search() {
-      console.log("/components/passwords.js search")
-      console.log("searchtext: " + $('input[name="searchtext"]')[0].value)
+      console.log("/components/passwords.js search()")
+  
+      var searchtext = this.get('searchtext');
+      console.log("  searchtext: " + searchtext)
 
-      console.log(this)
-    }
+      this.sendAction('refreshRoute', searchtext);
+    }    
   }
 });
