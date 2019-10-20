@@ -40,10 +40,10 @@ func CreatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	var password model.Password
-	json.Unmarshal(data, &password)
+	var jsonData model.GetPasswordOutput
+	json.Unmarshal(data, &jsonData)
 
-	id, err := CreatePassword(password)
+	id, err := CreatePassword(jsonData.Item)
 	if err != nil {
 		errorMessageHandler("error while creating record", 500, w)
 		return
@@ -53,16 +53,16 @@ func CreatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 	response.ID = id
 	response.RID = rid
 
-	jsonData, err := json.Marshal(response)
+	responseData, err := json.Marshal(response)
 	if err != nil {
 		errorMessageHandler("error while marshalling record", 500, w)
 		return
 	}
 
-	log.Println(string(jsonData))
+	log.Println(string(responseData))
 
 	w.WriteHeader(http.StatusOK)
-	w.Write(jsonData)
+	w.Write(responseData)
 
 }
 
@@ -262,6 +262,12 @@ func paginate(passwords []model.Password, path, token, ptoken string, size int) 
 func UpdatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 	rid := getUUID()
 
+	vars := mux.Vars(req)
+	ID := vars["id"]
+	log.Println("id:", ID)
+
+	addCORSHeader(w)
+
 	w.Header().Add("Content-Type", "application/json")
 	//vars := mux.Vars(req)
 
@@ -271,8 +277,11 @@ func UpdatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	var password model.Password
-	json.Unmarshal(data, &password)
+	var jsonData model.GetPasswordOutput
+	json.Unmarshal(data, &jsonData)
+
+	password := jsonData.Item
+	password.ID = ID
 
 	err = UpdatePassword(password)
 	if err != nil {
@@ -280,7 +289,7 @@ func UpdatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	log.Println(rid, "received:", password, "rid:", rid)
+	log.Println(rid, "updates received:", jsonData.Item, "id:", password.ID)
 
 	w.WriteHeader(http.StatusNoContent)
 }

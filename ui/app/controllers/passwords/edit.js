@@ -8,6 +8,10 @@ export default Controller.extend({
     savePassword(password) {
       console.log("/controllers/passwords/edit.js");
 
+      this.store.findRecord('password', password.id).then(function(record) {
+        record.save(); // => PATCH to '/passwords/id'
+      });
+
       this.get('router').transitionTo('/passwords')    
     }
   }
