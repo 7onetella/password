@@ -1,8 +1,10 @@
 import Component from '@ember/component';
-import {inject} from '@ember/service'
+import {inject as service} from '@ember/service'
 
 export default Component.extend({
-  router: inject(),
+  router: service(),
+  passwords: service(),
+  store: service(),
 
   actions: {
     edit(password) {
@@ -17,7 +19,11 @@ export default Component.extend({
       var searchtext = this.get('searchtext');
       console.log("  searchtext: " + searchtext)
 
-      this.sendAction('refreshRoute', searchtext);
+      var records = this.get('store').findAll('password');
+
+      console.log("  records: "+records)
+
+      this.set('password', records)
     }    
   }
 });
