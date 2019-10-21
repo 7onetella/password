@@ -138,6 +138,7 @@ func ListPasswordsRequestHandler(w http.ResponseWriter, req *http.Request) {
 
 }
 
+// AuthRequired requires auth for given handler
 func AuthRequired(next func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		c, err := req.Cookie("token")
@@ -191,10 +192,12 @@ func SignRequestHandler(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+// CORSHeader adds cores header
 func CORSHeader(w http.ResponseWriter) {
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 }
 
+// ContentTypeJSON writes content type json
 func ContentTypeJSON(w http.ResponseWriter) {
 	w.Header().Add("Content-Type", "application/json")
 }

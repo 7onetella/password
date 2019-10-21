@@ -153,8 +153,6 @@ func passwordRowsMapper(rows *sql.Rows) ([]model.Password, error) {
 
 		passwords = append(passwords, p)
 	}
-
-	return passwords, nil
 }
 
 func passwordRowMapper(row *sql.Row) (model.Password, error) {

@@ -47,8 +47,8 @@ func DecodeToken(tokenString string) (string, error) {
 
 	if claims, ok := token.Claims.(*IDClaims); ok && token.Valid {
 		return claims.ID, nil
-	} else {
-		return "", errors.New("Token Invalid")
 	}
+
+	return "", errors.New("Token Invalid")
 
 }
