@@ -141,19 +141,12 @@ func ListPasswordsRequestHandler(w http.ResponseWriter, req *http.Request) {
 // AuthRequired requires auth for given handler
 func AuthRequired(next func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
-		c, err := req.Cookie("token")
-		if err != nil {
-			if err == http.ErrNoCookie {
-				w.WriteHeader(http.StatusUnauthorized)
-				return
-			}
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
 
-		tokenString := c.Value
+		authorization := req.Header.Get("Authorization")
+		terms := strings.Split(authorization, " ")
+		token := terms[1]
 
-		ID, err := DecodeToken(tokenString)
+		ID, err := DecodeToken(token)
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
@@ -168,13 +161,18 @@ func AuthRequired(next func(http.ResponseWriter, *http.Request)) func(http.Respo
 
 // SignRequestHandler signs user
 func SignRequestHandler(w http.ResponseWriter, req *http.Request) {
+
 	CORSHeader(w)
 
-	w.Header().Add("Content-Type", "application/json")
-	username := req.FormValue("username")
-	password := req.FormValue("password")
+	ContentTypeJSON(w)
 
-	if username == "scott.seo@gmail.com" && password == "password" {
+	data, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		return
+	}
+	var cred model.Credentials
+	json.Unmarshal(data, &cred)
+	if cred.Username == "scott.seo@gmail.com" && cred.Password == "password" {
 		tokenString, expiration, err := EncodeID("id1234")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -186,6 +184,16 @@ func SignRequestHandler(w http.ResponseWriter, req *http.Request) {
 			Value:   tokenString,
 			Expires: expiration,
 		})
+		token := model.AuthToken{
+			Token: tokenString,
+		}
+
+		data, err := json.Marshal(&token)
+		if err != nil {
+			errorMessageHandler("error while marshalling", 500, w)
+			return
+		}
+		w.Write(data)
 	} else {
 		w.WriteHeader(http.StatusUnauthorized)
 		return

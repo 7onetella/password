@@ -9,23 +9,20 @@ export default Controller.extend({
   actions: {
     authenticate: function() {
       
-      console.log("username: " + this.get("username"))
-      console.log("password: " + this.get("password"))
+      const credentials = this.getProperties('username', 'password');
+      console.log(credentials);
+      const authenticator = 'authenticator:token'; // or 'authenticator:jwt'
 
-      $.post("http://localhost:9000/api/signin", {
-        username: this.get("username"),
-        password: this.get("password"),
-      }).then(function() {
-        // console.log("signin successful")
-        // document.location = "/passwords";
-      }, function(data) {
-        console.log(data);
-        if (data.status == 200) {
-          document.location = "/passwords";
-        } else {
-          this.set("loginFailed", true);
-        }
-      }.bind(this));
+      let promise = this.get('session').authenticate(authenticator, credentials)
+
+      var that = this
+      promise.then(function(){
+        console.log("  authentication successful. redirecting to listing page");
+        that.get('router').transitionTo('/passwords');
+      },function(reason) {
+        console.log("  reason:" + reason);
+        that.set("loginFailed", true);
+      });
 
     }
   }

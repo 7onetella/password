@@ -83,3 +83,12 @@ type ListPasswordsOutput struct {
 	Metadata Metadata   `json:"links"`
 	Token    string     `json:"token"`
 }
+
+type Credentials struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type AuthToken struct {
+	Token string `json:"token"`
+}
