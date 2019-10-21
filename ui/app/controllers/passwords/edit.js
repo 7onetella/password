@@ -10,6 +10,9 @@ export default Controller.extend({
       console.log("/controllers/passwords/edit.js");
 
       this.store.findRecord('password', password.id).then(function(record) {
+        console.log("  tags: "+password.tags);
+        var tags = password.tags.split(",");
+        record.set("tags", tags);
         record.save(); // => PATCH to '/passwords/id'
       });
 
