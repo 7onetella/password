@@ -143,6 +143,10 @@ func AuthRequired(next func(http.ResponseWriter, *http.Request)) func(http.Respo
 	return func(w http.ResponseWriter, req *http.Request) {
 
 		authorization := req.Header.Get("Authorization")
+		if authorization == "" {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
 		terms := strings.Split(authorization, " ")
 		token := terms[1]
 
