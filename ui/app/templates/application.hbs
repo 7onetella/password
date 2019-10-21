@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" >
   {{ link-to "Home" "index" class="navbar-brand" }}
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -20,7 +20,8 @@
       </li>
       {{#if session.isAuthenticated}}
         <li>
-          <a {{ action "invalidateSession" }} class="nav-link">Sign out</a>
+          <a href="#" {{ action "invalidateSession" preventDefault=false}} class="nav-link">Sign out</a>
+          {{!-- {{ link-to "Sign out" "invalidateSession" class="nav-link" }} --}}
         </li>
       {{else}}    
         <li class="nav-item">

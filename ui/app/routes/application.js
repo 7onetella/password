@@ -4,6 +4,7 @@ import { inject } from '@ember/service';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
 export default Route.extend(ApplicationRouteMixin, {
+  router: inject(),
   session: inject('session'),
 
   setupController (controller, model) {
