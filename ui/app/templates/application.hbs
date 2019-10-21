@@ -20,7 +20,7 @@
       </li>
       {{#if session.isAuthenticated}}
         <li>
-          <a {{ action 'invalidateSession' }} class="nav-link">Sign out</a>
+          <a {{ action "invalidateSession" }} class="nav-link">Sign out</a>
         </li>
       {{else}}    
         <li class="nav-item">
