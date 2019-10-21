@@ -22,13 +22,13 @@ func TestCreatePasswordRequest(t *testing.T) {
 
 	spec.When("svc.CreatePassword")
 
-	response, err := svc.CreatePassword(p)
+	response, err := svc.CreatePassword(model.PasswordInput{Data: p})
 
 	spec.Then()
 
 	spec.AssertAndFailNow(err == nil, "result should not return error", err)
 
-	spec.AssertAndFailNow(len(response.ID) > 0, "result should return non-empty id", len(response.ID))
+	spec.AssertAndFailNow(len(response.Data.ID) > 0, "result should return non-empty id", len(response.Data.ID))
 }
 
 func TestReadPasswordRequest(t *testing.T) {
@@ -41,14 +41,15 @@ func TestReadPasswordRequest(t *testing.T) {
 	}
 
 	expected := newPassword()
-	createResponse, err := svc.CreatePassword(expected)
-	ID := createResponse.ID
+	createResponse, err := svc.CreatePassword(model.PasswordInput{Data: expected})
+	ID := createResponse.Data.ID
 
 	spec.Given("id=" + ID)
 
 	spec.When("svc.ReadPassword(ID)")
 
-	password, err := svc.ReadPassword(ID)
+	o, err := svc.ReadPassword(ID)
+	password := o.Data
 
 	spec.Then()
 
@@ -74,14 +75,15 @@ func TestUpdatePasswordRequest(t *testing.T) {
 	}
 
 	p := newPassword()
-	createResponse, err := svc.CreatePassword(p)
-	p.ID = createResponse.ID
+	input := model.PasswordInput{Data: p}
+	output, err := svc.CreatePassword(input)
+	p.ID = output.Data.ID
 
 	spec.Given(prettyJSON(p), "username="+p.Username)
 
 	spec.When("svc.UpdatePassword")
 
-	err = svc.UpdatePassword(p)
+	err = svc.UpdatePassword(input)
 
 	spec.Then()
 
@@ -98,8 +100,8 @@ func TestDeletePasswordRequest(t *testing.T) {
 	}
 
 	expected := newPassword()
-	createResponse, err := svc.CreatePassword(expected)
-	ID := createResponse.ID
+	createResponse, err := svc.CreatePassword(model.PasswordInput{Data: expected})
+	ID := createResponse.Data.ID
 
 	spec.Given("ID=" + ID)
 
@@ -123,8 +125,8 @@ func TestListPasswordsRequest(t *testing.T) {
 	}
 
 	expected := newPassword()
-	createResponse, err := svc.CreatePassword(expected)
-	ID := createResponse.ID
+	createResponse, err := svc.CreatePassword(model.PasswordInput{Data: expected})
+	ID := createResponse.Data.ID
 
 	spec.Given("title=" + expected.Title)
 

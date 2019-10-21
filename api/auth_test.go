@@ -10,7 +10,7 @@ func TestEncodeID(t *testing.T) {
 
 	spec.When("EncodeID(1234)")
 
-	token, err := EncodeID("1234")
+	token, _, err := EncodeID("1234")
 
 	spec.Then()
 
@@ -22,7 +22,7 @@ func TestEncodeID(t *testing.T) {
 
 func TestDecodeToken(t *testing.T) {
 
-	tokenString, err := EncodeID("1234")
+	tokenString, _, err := EncodeID("1234")
 	if err != nil {
 		t.Fatalf("error while encoding token: %v", err)
 	}

@@ -29,45 +29,35 @@ func errorMessageHandler(message string, statusCode int, w http.ResponseWriter) 
 
 // CreatePasswordRequestHandler handles creating of password request
 func CreatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
-	//rid := getUUID()
 
-	addCORSHeader(w)
+	CORSHeader(w)
 
-	w.Header().Add("Content-Type", "application/json")
-	//vars := mux.Vars(req)
+	ContentTypeJSON(w)
 
-	data, err := ioutil.ReadAll(req.Body)
+	passwordRequest, err := DecodePasswordRequest(req)
+	WriteServerError(err, "error while retrieving json body", w)
 	if err != nil {
-		errorMessageHandler("error while retrieving json body", 500, w)
 		return
 	}
 
-	var jsonData model.GetPasswordOutput
-	json.Unmarshal(data, &jsonData)
-
-	id, err := CreatePassword(jsonData.Item)
+	ID, err := CreatePassword(passwordRequest.Data)
 	if err != nil {
 		errorMessageHandler("error while creating record", 500, w)
 		return
 	}
 
-	//	var response model.CreatePasswordOutput
-	//	response.ID = id
-	//	response.RID = rid
+	response := model.PasswordInput{
+		Data: passwordRequest.Data,
+	}
+	response.Data.ID = ID
 
-	fmt.Println("id = ", id)
-
-	responseJson := model.GetPasswordOutput{}
-	responseJson.Item = jsonData.Item
-	responseJson.Item.ID = id
-
-	responseData, err := json.Marshal(&responseJson)
+	responseData, err := json.Marshal(&response)
 	if err != nil {
 		errorMessageHandler("error while marshalling record", 500, w)
 		return
 	}
 
-	log.Println(string(responseData))
+	LogPasswordRequest(passwordRequest)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(responseData)
@@ -76,7 +66,7 @@ func CreatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 
 // ReadPasswordRequestHandler retrieves password by id
 func ReadPasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
-	addCORSHeader(w)
+	CORSHeader(w)
 	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(req)
 
@@ -91,11 +81,11 @@ func ReadPasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	responseOutput := model.GetPasswordOutput{
-		Item: password,
+	response := model.PasswordInput{
+		Data: password,
 	}
 
-	data, err := json.Marshal(&responseOutput)
+	data, err := json.Marshal(&response)
 	if err != nil {
 		errorMessageHandler("error while marshalling", 500, w)
 		return
@@ -108,7 +98,7 @@ func ReadPasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 func ListPasswordsRequestHandler(w http.ResponseWriter, req *http.Request) {
 	uuid := getUUID()
 
-	addCORSHeader(w)
+	CORSHeader(w)
 	w.Header().Add("Content-Type", "application/json")
 	// vars := mux.Vars(req)
 	title := req.FormValue("filter[title]")
@@ -177,7 +167,7 @@ func AuthRequired(next func(http.ResponseWriter, *http.Request)) func(http.Respo
 
 // SignRequestHandler signs user
 func SignRequestHandler(w http.ResponseWriter, req *http.Request) {
-	addCORSHeader(w)
+	CORSHeader(w)
 
 	w.Header().Add("Content-Type", "application/json")
 	username := req.FormValue("username")
@@ -201,8 +191,12 @@ func SignRequestHandler(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func addCORSHeader(w http.ResponseWriter) {
+func CORSHeader(w http.ResponseWriter) {
 	w.Header().Add("Access-Control-Allow-Origin", "*")
+}
+
+func ContentTypeJSON(w http.ResponseWriter) {
+	w.Header().Add("Content-Type", "application/json")
 }
 
 // PreflightOptionsHandler handles preflight OPTIONS
@@ -270,43 +264,31 @@ func paginate(passwords []model.Password, path, token, ptoken string, size int) 
 
 // UpdatePasswordRequestHandler handles creating of password request
 func UpdatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
-	rid := getUUID()
 
-	vars := mux.Vars(req)
-	ID := vars["id"]
-	log.Println("id:", ID)
+	CORSHeader(w)
 
-	addCORSHeader(w)
+	ContentTypeJSON(w)
 
-	w.Header().Add("Content-Type", "application/json")
-	//vars := mux.Vars(req)
-
-	data, err := ioutil.ReadAll(req.Body)
+	dataPassword, err := DecodePasswordRequest(req)
+	WriteServerError(err, "error while retrieving json body", w)
 	if err != nil {
-		errorMessageHandler("error while retrieving json body", 500, w)
 		return
 	}
 
-	var jsonData model.GetPasswordOutput
-	json.Unmarshal(data, &jsonData)
-
-	password := jsonData.Item
-	password.ID = ID
-
-	err = UpdatePassword(password)
+	err = UpdatePassword(dataPassword.Data)
+	WriteServerError(err, "error while persisting to db", w)
 	if err != nil {
-		errorMessageHandler("error while updating record", 500, w)
 		return
 	}
 
-	log.Println(rid, "updates received:", jsonData.Item, "id:", password.ID)
+	LogPasswordRequest(dataPassword)
 
 	w.WriteHeader(http.StatusNoContent)
 }
 
 // DeletePasswordRequestHandler deletes password by id
 func DeletePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
-	addCORSHeader(w)
+	CORSHeader(w)
 
 	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(req)
@@ -385,9 +367,10 @@ func resolveURL(endpointPrefix, token, ptoken string, size int) string {
 	return url
 }
 
-// DataCollectHanldr data collect handler
+// DataCollectHandler data collect handler
 func DataCollectHandler(w http.ResponseWriter, req *http.Request) {
-	addCORSHeader(w)
+
+	CORSHeader(w)
 	w.Header().Add("Content-Type", "application/json")
 
 	data := `{
@@ -398,6 +381,35 @@ func DataCollectHandler(w http.ResponseWriter, req *http.Request) {
 `
 	time.Sleep(1 * time.Second)
 	w.Write([]byte(data))
+}
+
+// DecodePasswordRequest decodes password request
+func DecodePasswordRequest(req *http.Request) (model.PasswordInput, error) {
+	var dataPassword model.PasswordInput
+	vars := mux.Vars(req)
+	ID := vars["id"]
+
+	data, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		return dataPassword, err
+	}
+
+	json.Unmarshal(data, &dataPassword)
+	dataPassword.Data.ID = ID
+
+	return dataPassword, nil
+}
+
+// WriteServerError writes server error if err is not nuil
+func WriteServerError(err error, message string, w http.ResponseWriter) {
+	if err != nil {
+		errorMessageHandler(message, 500, w)
+	}
+}
+
+// LogPasswordRequest logs password request
+func LogPasswordRequest(passwordRequest model.PasswordInput) {
+	log.Println("rid:", getUUID(), "received:", passwordRequest.Data)
 }
 
 // /api/list/bank,chase

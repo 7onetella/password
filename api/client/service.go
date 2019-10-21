@@ -56,31 +56,31 @@ func CallEndpoint(url, method string, v interface{}, o interface{}) (interface{}
 }
 
 // CreatePassword creates password
-func (ps *PasswordService) CreatePassword(p model.Password) (*model.CreatePasswordOutput, error) {
-	o, err := CallEndpoint(ps.GetEndpoint(), "POST", &p, &model.CreatePasswordOutput{})
+func (ps *PasswordService) CreatePassword(input model.PasswordInput) (*model.PasswordOutput, error) {
+	o, err := CallEndpoint(ps.GetEndpoint(), "POST", &input, &model.PasswordOutput{})
 	if err != nil {
 		return nil, err
 	}
 
-	return o.(*model.CreatePasswordOutput), nil
+	return o.(*model.PasswordOutput), nil
 }
 
 // ReadPassword creates password
-func (ps *PasswordService) ReadPassword(ID string) (*model.Password, error) {
+func (ps *PasswordService) ReadPassword(ID string) (*model.PasswordOutput, error) {
 
-	o, err := CallEndpoint(ps.GetEndpoint()+"/"+ID, "GET", nil, &model.Password{})
+	o, err := CallEndpoint(ps.GetEndpoint()+"/"+ID, "GET", nil, &model.PasswordOutput{})
 	if err != nil {
 		return nil, err
 	}
 
-	return o.(*model.Password), nil
+	return o.(*model.PasswordOutput), nil
 
 }
 
 // UpdatePassword updates password
-func (ps *PasswordService) UpdatePassword(p model.Password) error {
+func (ps *PasswordService) UpdatePassword(input model.PasswordInput) error {
 
-	_, err := CallEndpoint(ps.GetEndpoint(), "PATCH", &p, nil)
+	_, err := CallEndpoint(ps.GetEndpoint(), "PATCH", &input, nil)
 	if err != nil {
 		return err
 	}

@@ -67,8 +67,14 @@ type ListPasswordsInput struct {
 	Username string
 }
 
-type GetPasswordOutput struct {
-	Item Password `json:"data"`
+// PasswordOutput password output json
+type PasswordOutput struct {
+	Data Password `json:"data"`
+}
+
+// PasswordInput password input json
+type PasswordInput struct {
+	Data Password `json:"data"`
 }
 
 // ListPasswordsOutput list passwords output
@@ -76,10 +82,4 @@ type ListPasswordsOutput struct {
 	Items    []Password `json:"data"`
 	Metadata Metadata   `json:"links"`
 	Token    string     `json:"token"`
-}
-
-// CreatePasswordOutput password create resonse
-type CreatePasswordOutput struct {
-	RID string `json:"rid"`
-	ID  string `json:"id"`
 }
