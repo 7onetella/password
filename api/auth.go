@@ -2,12 +2,22 @@ package main
 
 import (
 	"errors"
+	"fmt"
+	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
-var hmacSampleSecret = []byte("hello")
+var hmacSecret = []byte("")
+
+func init() {
+	cryptoToken := os.Getenv("CRYPTO_TOKEN")
+	if len(cryptoToken) == 0 {
+		fmt.Println("CRYPTO_TOKEN is empty")
+		os.Exit(1)
+	}
+}
 
 // IDClaims custom jwt claim with ID
 type IDClaims struct {
@@ -30,7 +40,7 @@ func EncodeID(id string) (string, time.Time, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 
 	// Sign and get the complete encoded token as a string using the secret
-	tokenString, err := token.SignedString(hmacSampleSecret)
+	tokenString, err := token.SignedString(hmacSecret)
 
 	return tokenString, expiration, err
 }
@@ -39,7 +49,7 @@ func EncodeID(id string) (string, time.Time, error) {
 func DecodeToken(tokenString string) (string, error) {
 
 	token, err := jwt.ParseWithClaims(tokenString, &IDClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return hmacSampleSecret, nil
+		return hmacSecret, nil
 	})
 	if err != nil {
 		return "", err

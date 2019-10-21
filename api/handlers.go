@@ -145,6 +145,7 @@ func AuthRequired(next func(http.ResponseWriter, *http.Request)) func(http.Respo
 		authorization := req.Header.Get("Authorization")
 		if authorization == "" {
 			w.WriteHeader(http.StatusUnauthorized)
+			fmt.Println("Unauthorized")
 			return
 		}
 		terms := strings.Split(authorization, " ")
@@ -176,8 +177,8 @@ func SignRequestHandler(w http.ResponseWriter, req *http.Request) {
 	}
 	var cred model.Credentials
 	json.Unmarshal(data, &cred)
-	if cred.Username == "scott.seo@gmail.com" && cred.Password == "password" {
-		tokenString, expiration, err := EncodeID("id1234")
+	if cred.Username == "admin" && cred.Password == "password" {
+		tokenString, expiration, err := EncodeID("admin")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return

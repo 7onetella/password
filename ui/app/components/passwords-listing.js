@@ -23,7 +23,7 @@ export default Component.extend({
       var that = this
       this.store.query('password', {
         filter: {
-          title: searchtext
+          title: "%" + searchtext + "%"
         }
       }).then(function(passwords) {
         that.set('password', passwords)
