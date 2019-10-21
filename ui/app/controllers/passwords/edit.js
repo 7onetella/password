@@ -1,3 +1,4 @@
+/*eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
 import Controller from '@ember/controller';
 import {inject} from '@ember/service'
 
