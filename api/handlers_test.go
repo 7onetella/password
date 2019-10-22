@@ -83,7 +83,7 @@ func TestUpdatePasswordRequest(t *testing.T) {
 
 	spec.When("svc.UpdatePassword")
 
-	err = svc.UpdatePassword(input)
+	err = svc.UpdatePassword(model.PasswordInput{Data: p})
 
 	spec.Then()
 
@@ -122,6 +122,12 @@ func TestListPasswordsRequest(t *testing.T) {
 	svc, err := client.NewPasswordService()
 	if err != nil {
 		t.Errorf("creating serivce failed: %v", err)
+	}
+
+	err = svc.Signin(model.Credentials{Username: "admin", Password: "password"})
+	if err != nil {
+		t.Errorf("authenticating failed: %v", err)
+		return
 	}
 
 	expected := newPassword()

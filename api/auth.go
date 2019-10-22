@@ -2,7 +2,7 @@ package main
 
 import (
 	"errors"
-	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -14,9 +14,10 @@ var hmacSecret = []byte("")
 func init() {
 	cryptoToken := os.Getenv("CRYPTO_TOKEN")
 	if len(cryptoToken) == 0 {
-		fmt.Println("CRYPTO_TOKEN is empty")
-		os.Exit(1)
+		log.Println("CRYPTO_TOKEN is empty")
+		return
 	}
+	hmacSecret = []byte(cryptoToken)
 }
 
 // IDClaims custom jwt claim with ID

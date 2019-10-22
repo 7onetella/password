@@ -15,7 +15,8 @@ import (
 
 // PasswordService password service
 type PasswordService struct {
-	serverAddr string
+	serverAddr    string
+	Authorization string
 }
 
 // NewPasswordService returns new instance of password service
@@ -39,8 +40,8 @@ func (ps *PasswordService) GetEndpoint() string {
 }
 
 // CallEndpoint calls endpoint
-func CallEndpoint(url, method string, v interface{}, o interface{}) (interface{}, error) {
-	data, err := httpAction(url, method, v)
+func CallEndpoint(url, method, authorization string, v interface{}, o interface{}) (interface{}, error) {
+	data, err := httpAction(url, method, authorization, v)
 	if err != nil {
 		return nil, err
 	}
@@ -55,9 +56,22 @@ func CallEndpoint(url, method string, v interface{}, o interface{}) (interface{}
 	return o, nil
 }
 
+// Signin authenticates
+func (ps *PasswordService) Signin(input model.Credentials) error {
+	o, err := CallEndpoint("http://"+ps.serverAddr+"/api/signin", "POST", "", &input, &model.AuthToken{})
+	if err != nil {
+		return err
+	}
+
+	authToken := o.(*model.AuthToken)
+	ps.Authorization = "Bearer " + authToken.Token
+
+	return nil
+}
+
 // CreatePassword creates password
 func (ps *PasswordService) CreatePassword(input model.PasswordInput) (*model.PasswordOutput, error) {
-	o, err := CallEndpoint(ps.GetEndpoint(), "POST", &input, &model.PasswordOutput{})
+	o, err := CallEndpoint(ps.GetEndpoint(), "POST", ps.Authorization, &input, &model.PasswordOutput{})
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +82,7 @@ func (ps *PasswordService) CreatePassword(input model.PasswordInput) (*model.Pas
 // ReadPassword creates password
 func (ps *PasswordService) ReadPassword(ID string) (*model.PasswordOutput, error) {
 
-	o, err := CallEndpoint(ps.GetEndpoint()+"/"+ID, "GET", nil, &model.PasswordOutput{})
+	o, err := CallEndpoint(ps.GetEndpoint()+"/"+ID, "GET", ps.Authorization, nil, &model.PasswordOutput{})
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +94,7 @@ func (ps *PasswordService) ReadPassword(ID string) (*model.PasswordOutput, error
 // UpdatePassword updates password
 func (ps *PasswordService) UpdatePassword(input model.PasswordInput) error {
 
-	_, err := CallEndpoint(ps.GetEndpoint(), "PATCH", &input, nil)
+	_, err := CallEndpoint(ps.GetEndpoint()+"/"+input.Data.ID, "PATCH", ps.Authorization, &input, nil)
 	if err != nil {
 		return err
 	}
@@ -92,7 +106,7 @@ func (ps *PasswordService) UpdatePassword(input model.PasswordInput) error {
 // DeletePassword deletes password
 func (ps *PasswordService) DeletePassword(ID string) error {
 
-	_, err := CallEndpoint(ps.GetEndpoint()+"/"+ID, "DELETE", nil, nil)
+	_, err := CallEndpoint(ps.GetEndpoint()+"/"+ID, "DELETE", ps.Authorization, nil, nil)
 	if err != nil {
 		return err
 	}
@@ -104,7 +118,7 @@ func (ps *PasswordService) DeletePassword(ID string) error {
 // ListPasswords finds passwords by title
 func (ps *PasswordService) ListPasswords(input model.ListPasswordsInput) (*model.ListPasswordsOutput, error) {
 
-	o, err := CallEndpoint(ps.GetEndpoint()+"?title="+input.Title, "GET", nil, &model.ListPasswordsOutput{})
+	o, err := CallEndpoint(ps.GetEndpoint()+"?title="+input.Title, "GET", ps.Authorization, nil, &model.ListPasswordsOutput{})
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +127,7 @@ func (ps *PasswordService) ListPasswords(input model.ListPasswordsInput) (*model
 
 }
 
-func httpAction(url, method string, v interface{}) ([]byte, error) {
+func httpAction(url, method string, authorization string, v interface{}) ([]byte, error) {
 	var r io.Reader
 	if v != nil {
 		b, err := json.Marshal(v)
@@ -127,12 +141,14 @@ func httpAction(url, method string, v interface{}) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	req.Header.Add("Authorization", authorization)
+
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 
-	if res.StatusCode != 200 || res.StatusCode != 204 {
+	if res.StatusCode > 300 {
 		return nil, errors.New("api returned status code " + res.Status)
 	}
 
