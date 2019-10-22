@@ -40,11 +40,12 @@ var readCmd = &cobra.Command{
 
 		ID := args[0]
 
-		password, err := svc.ReadPassword(ID)
+		output, err := svc.ReadPassword(ID)
 		ExitOnError(err, "reading password")
 
 		Success("reading password")
 
+		password := output.Data
 		Println(password.URL)
 		Println(password.Title)
 		Println(password.Username)

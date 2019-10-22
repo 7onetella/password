@@ -50,11 +50,11 @@ var createCmd = &cobra.Command{
 		p.Notes = createCmdNotes
 		p.Tags = createCmdTags
 
-		response, err := svc.CreatePassword(p)
+		output, err := svc.CreatePassword(model.PasswordInput{Data: p})
 		ExitOnError(err, "creating password")
 
 		Success("creating password")
-		Info("ID: " + response.ID)
+		Info("ID: " + output.Data.ID)
 
 	},
 }

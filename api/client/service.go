@@ -132,6 +132,10 @@ func httpAction(url, method string, v interface{}) ([]byte, error) {
 		return nil, err
 	}
 
+	if res.StatusCode != 200 || res.StatusCode != 204 {
+		return nil, errors.New("api returned status code " + res.Status)
+	}
+
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 

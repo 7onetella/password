@@ -22,6 +22,7 @@ package cmd
 
 import (
 	"github.com/7onetella/password/api/client"
+	"github.com/7onetella/password/api/model"
 	"github.com/spf13/cobra"
 )
 
@@ -44,9 +45,11 @@ var updateCmd = &cobra.Command{
 
 		ID := args[0]
 
-		record, err := svc.ReadPassword(ID)
+		output, err := svc.ReadPassword(ID)
 		ExitOnError(err, "reading existing record")
 		var dirty bool
+
+		record := output.Data
 
 		notEmpty := func(s string) bool {
 			dirty = true
@@ -74,7 +77,7 @@ var updateCmd = &cobra.Command{
 		}
 
 		if dirty {
-			err = svc.UpdatePassword(*record)
+			err = svc.UpdatePassword(model.PasswordInput{Data: record})
 			ExitOnError(err, "updating password")
 
 			Success("updating password")

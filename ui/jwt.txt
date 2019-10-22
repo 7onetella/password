@@ -36,3 +36,30 @@ golang api server generator
 https://github.com/wantedly/apig
 
 
+
+CI/CD
+
+git commit & push
+
+jenkins job scan
+
+checkout code
+
+compile static asset and go code
+
+deploy to dev server using nomad, consul   <=== dev server = jenkins, nomad, consul, fabio, ldap, graphte, grafana, java, redis, postgres
+
+run integration test
+
+deploy to prod <= prod server = nomad, consul, fabio
+
+central service farm <= nomad cluster, consul cluster
+
+each pi 
+pi:      $55
+power:   $ 9
+sd card: $ 8
+hdmi     $ 8
+case     $15
+
+
