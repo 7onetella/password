@@ -9,6 +9,8 @@ build() {
 
   export SERVER_ADDR=localhost:4242
 
+  export CRYPTO_TOKEN=test_crypto_token
+
   go test -v ./...
 
   # get gox for cross compilation
