@@ -42,6 +42,9 @@ var listCmd = &cobra.Command{
 		svc, err := client.NewPasswordService()
 		ExitOnError(err, "initializing client")
 
+		err = svc.Signin(model.Credentials{Username: "admin", Password: "password"})
+		ExitOnError(err, "initializing client")
+
 		input := model.ListPasswordsInput{}
 		input.Title = args[0]
 		response, err := svc.ListPasswords(input)
