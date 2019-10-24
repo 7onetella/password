@@ -7,6 +7,13 @@ https://medium.com/rate-engineering/go-test-your-code-an-introduction-to-effecti
 Go testing
 https://segment.com/blog/5-advanced-testing-techniques-in-go/
 
+mkcert
+https://github.com/FiloSottile/mkcert
 
+square cert gen tool
+https://github.com/square/certstrap
+
+square cert utility tool
+https://github.com/square/certigo
 
 

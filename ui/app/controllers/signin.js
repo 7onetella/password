@@ -11,7 +11,7 @@ export default Controller.extend({
       
       const credentials = this.getProperties('username', 'password');
       console.log(credentials);
-      const authenticator = 'authenticator:token'; // or 'authenticator:jwt'
+      const authenticator = 'authenticator:jwt'; // or 'authenticator:jwt'
 
       let promise = this.get('session').authenticate(authenticator, credentials)
 

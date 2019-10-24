@@ -90,5 +90,11 @@ type Credentials struct {
 }
 
 type AuthToken struct {
-	Token string `json:"token"`
+	Token      string `json:"token"`
+	Expiration int64  `json:"exp"`
+}
+
+type RefreshToken struct {
+	Token      string `json:"token"`
+	Expiration int64  `json:"exp"`
 }

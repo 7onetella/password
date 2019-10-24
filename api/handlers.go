@@ -109,7 +109,7 @@ func ListPasswordsRequestHandler(w http.ResponseWriter, req *http.Request) {
 		size = 20
 	}
 
-	fmt.Println("title:", title)
+	log.Println("title:", title)
 
 	if title == "" {
 		title = "%"
@@ -151,21 +151,74 @@ func AuthRequired(next func(http.ResponseWriter, *http.Request)) func(http.Respo
 		terms := strings.Split(authorization, " ")
 		token := terms[1]
 
-		ID, err := DecodeToken(token)
+		ID, expiration, err := DecodeToken(token)
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 
-		fmt.Println("Auth Token Decoded. ID: ", ID)
+		log.Println("Authenticated. ID:", ID, ", Expiration:", expiration)
 
 		// allow access
 		next(w, req)
 	}
 }
 
-// SignRequestHandler signs user
-func SignRequestHandler(w http.ResponseWriter, req *http.Request) {
+// TokenRefreshHandler endpoint to refresh jwt token
+func TokenRefreshHandler(w http.ResponseWriter, req *http.Request) {
+
+	log.Println("Token Refresh Started")
+
+	CORSHeader(w)
+
+	ContentTypeJSON(w)
+
+	di, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		return
+	}
+
+	log.Println("body = ", string(di))
+	var rt model.RefreshToken
+	json.Unmarshal(di, &rt)
+
+	log.Println("token = ", rt.Token)
+
+	ID, expiration, err := DecodeToken(rt.Token)
+	if err != nil {
+		log.Println("Issue with decoding", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	// check for expiration on incoming token
+	if time.Now().Unix() > expiration {
+		w.WriteHeader(http.StatusUnauthorized)
+		log.Println("token to refresh expired", expiration)
+		return
+	}
+
+	tokenString, expTime, err := EncodeID(ID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	log.Println("Token refresh successful")
+	refreshToken := model.RefreshToken{
+		Token:      tokenString,
+		Expiration: expTime.Unix(),
+	}
+
+	data, err := json.Marshal(&refreshToken)
+	if err != nil {
+		errorMessageHandler("error while marshalling", 500, w)
+		return
+	}
+	w.Write(data)
+}
+
+// SigninRequestHandler signs user
+func SigninRequestHandler(w http.ResponseWriter, req *http.Request) {
 
 	CORSHeader(w)
 
@@ -178,19 +231,20 @@ func SignRequestHandler(w http.ResponseWriter, req *http.Request) {
 	var cred model.Credentials
 	json.Unmarshal(data, &cred)
 	if cred.Username == "admin" && cred.Password == "password" {
-		tokenString, expiration, err := EncodeID("admin")
+		tokenString, expTime, err := EncodeID("admin")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		fmt.Println("Sign-In successful dropping token cookie")
+		log.Println("Sign-In successful dropping token cookie")
 		http.SetCookie(w, &http.Cookie{
 			Name:    "token",
 			Value:   tokenString,
-			Expires: expiration,
+			Expires: expTime,
 		})
 		token := model.AuthToken{
-			Token: tokenString,
+			Token:      tokenString,
+			Expiration: expTime.Unix(),
 		}
 
 		data, err := json.Marshal(&token)

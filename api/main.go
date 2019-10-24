@@ -45,10 +45,10 @@ func main() {
 
 	r.Path("/api/health").Methods("GET").HandlerFunc(AuthRequired(HealthCheckHandler))
 	r.Path("/api/version").Methods("GET").HandlerFunc(VersionHandler)
-	r.Path("/api/signin").Methods("POST").HandlerFunc(SignRequestHandler)
+	r.Path("/api/token-refresh").Methods("POST").HandlerFunc(TokenRefreshHandler)
+	r.Path("/api/signin").Methods("POST").HandlerFunc(SigninRequestHandler)
 	r.Path("/data/collect/v1/").Methods("POST").HandlerFunc(DataCollectHandler)
 	http.Handle("/", r)
-
 	log.Println("starting server on port " + httpPort)
 
 	srv := &http.Server{
@@ -60,5 +60,5 @@ func main() {
 		Handler:      web.ErrorChecker(r), // Pass our instance of gorilla/mux in.
 	}
 
-	log.Fatal(srv.ListenAndServe())
+	log.Fatal(srv.ListenAndServeTLS("localhost-crt.pem", "localhost-key.pem"))
 }

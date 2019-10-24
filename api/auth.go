@@ -28,11 +28,11 @@ type IDClaims struct {
 
 // EncodeID signs id
 func EncodeID(id string) (string, time.Time, error) {
-	expiration := time.Now().Add(5 * time.Minute)
+	expTime := time.Now().Add(20 * time.Second)
 	claim := IDClaims{
 		ID: id,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expiration.Unix(),
+			ExpiresAt: expTime.Unix(),
 		},
 	}
 
@@ -43,23 +43,23 @@ func EncodeID(id string) (string, time.Time, error) {
 	// Sign and get the complete encoded token as a string using the secret
 	tokenString, err := token.SignedString(hmacSecret)
 
-	return tokenString, expiration, err
+	return tokenString, expTime, err
 }
 
 // DecodeToken decodes jwt token
-func DecodeToken(tokenString string) (string, error) {
+func DecodeToken(tokenString string) (string, int64, error) {
 
 	token, err := jwt.ParseWithClaims(tokenString, &IDClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return hmacSecret, nil
 	})
 	if err != nil {
-		return "", err
+		return "", 0, err
 	}
 
 	if claims, ok := token.Claims.(*IDClaims); ok && token.Valid {
-		return claims.ID, nil
+		return claims.ID, claims.ExpiresAt, nil
 	}
 
-	return "", errors.New("Token Invalid")
+	return "", 0, errors.New("Token Invalid")
 
 }
