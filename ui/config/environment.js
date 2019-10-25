@@ -57,6 +57,21 @@ module.exports = function(environment) {
     ENV.APP.autoboot = false;
   }
 
+  if (environment === 'dev') {
+    // here you can enable a production-specific feature
+    ENV['ember-simple-auth-token'] = {
+      serverTokenEndpoint: 'https://dev/api/signin', // Server endpoint to send authenticate request
+      tokenPropertyName: 'token', // Key in server response that contains the access token
+      headers: {}, // Headers to add to the    
+      tokenExpirationInvalidateSession: true, // Enables session invalidation on token expiration
+      tokenExpireName: 'exp', // Field containing token expiration      
+      refreshAccessTokens: true,
+      refreshLeeway: 10, // refresh 0.1 minutes (10 seconds) before expiration
+      serverTokenRefreshEndpoint: 'https://dev/api/token-refresh', // Server endpoint to send refresh request
+      refreshTokenPropertyName: 'token', // Key in server response that contains the refresh token
+    }
+  }
+
   if (environment === 'production') {
     // here you can enable a production-specific feature
     ENV['ember-simple-auth-token'] = {

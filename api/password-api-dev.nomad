@@ -61,6 +61,7 @@ job "password" {
       # available to the task when it runs.
       env {
         "HTTP_PORT" = "${NOMAD_PORT_http}"
+        "STAGE" = "dev"
       }
 
       template {

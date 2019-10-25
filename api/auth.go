@@ -2,23 +2,10 @@ package main
 
 import (
 	"errors"
-	"log"
-	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
-
-var hmacSecret = []byte("")
-
-func init() {
-	cryptoToken := os.Getenv("CRYPTO_TOKEN")
-	if len(cryptoToken) == 0 {
-		log.Println("CRYPTO_TOKEN is empty")
-		return
-	}
-	hmacSecret = []byte(cryptoToken)
-}
 
 // IDClaims custom jwt claim with ID
 type IDClaims struct {

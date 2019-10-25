@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,8 +13,10 @@ import (
 	"github.com/markbates/refresh/refresh/web"
 )
 
-var httpPort string
 var host string
+var httpPort string
+var db *sql.DB
+var hmacSecret = []byte("")
 
 // URLBase url base for next link
 var URLBase string
@@ -22,13 +25,49 @@ var URLBase string
 var Version string
 
 func init() {
-	serverAddr := os.Getenv("SERVER_ADDR")
-	terms := strings.Split(serverAddr, ":")
+	stage := os.Getenv("STAGE")
 
+	serverAddr := GetEnvWithDefault("SERVER_ADDR", stage)
+	terms := strings.Split(serverAddr, ":")
 	host = terms[0]
 	httpPort = terms[1]
 
 	URLBase = fmt.Sprintf("http://%s:%s/api", host, httpPort)
+
+	connStr := GetEnvWithDefault("DB_CONNSTR", stage)
+	dbinst, err := sql.Open("postgres", connStr)
+	if err != nil {
+		panic("error while opening db connection")
+	}
+	db = dbinst
+
+	cryptoToken := GetEnvWithDefault("CRYPTO_TOKEN", stage)
+	if len(cryptoToken) == 0 {
+		log.Println("CRYPTO_TOKEN is empty")
+		return
+	}
+	hmacSecret = []byte(cryptoToken)
+}
+
+// GetEnvWithDefault attemps to retrieve from env. default calculated based on stage if env value empty.
+func GetEnvWithDefault(env, stage string) string {
+
+	if env == "DB_CONNSTR" {
+		return fmt.Sprintf("postgres://%s:%s114@%s/devdb", stage, stage, stage)
+	}
+
+	if env == "SERVER_ADDR" {
+		if stage == "localhost" {
+			return fmt.Sprintf("%s:4242", stage)
+		}
+		return fmt.Sprintf("%s:443", stage)
+	}
+
+	if env == "CRYPTO_TOKEN" {
+		return fmt.Sprintf("%s_crypto_token", stage)
+	}
+
+	return ""
 }
 
 func main() {
@@ -77,5 +116,6 @@ func main() {
 		http.Redirect(w, r, url, http.StatusMovedPermanently)
 	}))
 
+	log.Println("host:", host)
 	log.Fatal(srv.ListenAndServeTLS(host+"-crt.pem", host+"-key.pem"))
 }

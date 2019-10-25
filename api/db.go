@@ -3,29 +3,12 @@ package main
 import (
 	"database/sql"
 	"log"
-	"os"
 	"strings"
 
 	"github.com/7onetella/password/api/model"
 	"github.com/boltdb/bolt"
 	_ "github.com/lib/pq"
 )
-
-var db *sql.DB
-
-func init() {
-	connStr, exists := os.LookupEnv("DB_CONNSTR")
-	if !exists {
-		panic("empty environment variable DB_CONNSTR")
-	}
-
-	dbinst, err := sql.Open("postgres", connStr)
-	if err != nil {
-		panic("error while opening db connection")
-	}
-
-	db = dbinst
-}
 
 // DataSource is a wrapper for sql.DB
 type DataSource struct {
