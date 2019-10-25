@@ -12,6 +12,8 @@ build() {
 
   # go test -v ./...
 
+  go build ./...
+
   ./build.sh dev
 
   # get gox for cross compilation
