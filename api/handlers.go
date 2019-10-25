@@ -178,7 +178,6 @@ func TokenRefreshHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	log.Println("body = ", string(di))
 	var rt model.RefreshToken
 	json.Unmarshal(di, &rt)
 
@@ -481,9 +480,3 @@ func WriteServerError(err error, message string, w http.ResponseWriter) {
 func LogPasswordRequest(passwordRequest model.PasswordInput) {
 	log.Println("rid:", getUUID(), "received:", passwordRequest.Data)
 }
-
-// /api/list/bank,chase
-
-// /api/version
-
-// /health

@@ -4,7 +4,7 @@ module.exports = function(environment) {
   let ENV = {
     modulePrefix: 'ui',
     environment,
-    rootURL: '/',
+    rootURL: '/ui',
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
@@ -59,6 +59,17 @@ module.exports = function(environment) {
 
   if (environment === 'production') {
     // here you can enable a production-specific feature
+    ENV['ember-simple-auth-token'] = {
+      serverTokenEndpoint: 'https://keepass:4242/api/signin', // Server endpoint to send authenticate request
+      tokenPropertyName: 'token', // Key in server response that contains the access token
+      headers: {}, // Headers to add to the    
+      tokenExpirationInvalidateSession: true, // Enables session invalidation on token expiration
+      tokenExpireName: 'exp', // Field containing token expiration      
+      refreshAccessTokens: true,
+      refreshLeeway: 10, // refresh 0.1 minutes (10 seconds) before expiration
+      serverTokenRefreshEndpoint: 'https://keepass:4242/api/token-refresh', // Server endpoint to send refresh request
+      refreshTokenPropertyName: 'token', // Key in server response that contains the refresh token
+    }
   }
 
   return ENV;

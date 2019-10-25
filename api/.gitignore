@@ -4,3 +4,5 @@ passwords.bleve
 *.nomad.*
 *.out
 *.pem
+ui/*
+bindata.go

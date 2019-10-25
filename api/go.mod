@@ -22,7 +22,7 @@ require (
 	github.com/couchbase/moss v0.0.0-20190322010551-a0cae174c498 // indirect
 	github.com/couchbase/vellum v0.0.0-20190829182332-ef2e028c01fd // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/elazarl/go-bindata-assetfs v1.0.0 // indirect
+	github.com/elazarl/go-bindata-assetfs v1.0.0
 	github.com/etcd-io/bbolt v1.3.3 // indirect
 	github.com/glendc/go-external-ip v0.0.0-20170425150139-139229dcdddd // indirect
 	github.com/glycerine/go-unsnap-stream v0.0.0-20190901134440-81cf024a9e0a // indirect

@@ -16,4 +16,8 @@ https://github.com/square/certstrap
 square cert utility tool
 https://github.com/square/certigo
 
+Releasing
 
+rm -r dist/* && ember build --environment=production && cp -r dist/* ../api/ui/
+
+go-bindata-assetfs ui/...

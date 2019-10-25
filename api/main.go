@@ -48,8 +48,14 @@ func main() {
 	r.Path("/api/token-refresh").Methods("POST").HandlerFunc(TokenRefreshHandler)
 	r.Path("/api/signin").Methods("POST").HandlerFunc(SigninRequestHandler)
 	r.Path("/data/collect/v1/").Methods("POST").HandlerFunc(DataCollectHandler)
+	r.PathPrefix("/ui/").Handler(http.StripPrefix("/ui/", http.FileServer(assetFS())))
+	r.Path("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Println("/ redirecting to /ui/")
+		http.Redirect(w, r, "/ui/", http.StatusMovedPermanently)
+	})
+
 	http.Handle("/", r)
-	log.Println("starting server on port " + httpPort)
+	log.Println("starting https server on port " + httpPort)
 
 	srv := &http.Server{
 		Addr: fmt.Sprintf("0.0.0.0:%s", httpPort),
@@ -60,5 +66,12 @@ func main() {
 		Handler:      web.ErrorChecker(r), // Pass our instance of gorilla/mux in.
 	}
 
-	log.Fatal(srv.ListenAndServeTLS("localhost-crt.pem", "localhost-key.pem"))
+	// credit goes to https://stackoverflow.com/a/41617233
+	go http.ListenAndServe(":80", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Println("redirecting http request to https")
+		url := "https://" + r.Host + r.URL.String()
+		http.Redirect(w, r, url, http.StatusMovedPermanently)
+	}))
+
+	log.Fatal(srv.ListenAndServeTLS(host+"-crt.pem", host+"-key.pem"))
 }
