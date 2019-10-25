@@ -51,9 +51,11 @@ job "password" {
 
         check {
           type     = "http"
+          protocol = "https"
           path     = "/api/health"
           interval = "10s"
           timeout  = "2s"
+          tls_skip_verify = true
         }
       }
 
