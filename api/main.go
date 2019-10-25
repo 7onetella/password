@@ -43,6 +43,10 @@ func main() {
 	r.Path("/api/passwords").Methods("GET").HandlerFunc(AuthRequired(ListPasswordsRequestHandler))
 	r.Path("/api/passwords").Queries("filter[title]", "{title}").Queries("token", "{token}").Queries("ptoken", "{ptoken}").HandlerFunc(AuthRequired(ListPasswordsRequestHandler))
 
+	r.Path("/favicon.ico").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Println("/favicon")
+		w.Write([]byte{})
+	})
 	r.Path("/api/health").Methods("GET").HandlerFunc(AuthRequired(HealthCheckHandler))
 	r.Path("/api/version").Methods("GET").HandlerFunc(VersionHandler)
 	r.Path("/api/token-refresh").Methods("POST").HandlerFunc(TokenRefreshHandler)
