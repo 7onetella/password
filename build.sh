@@ -11,8 +11,8 @@ cd api
 
 echo current location is $(pwd)
 
-go build ./...
-
 ~/bin/go-bindata-assetfs ui/...
+
+go build ./...
 
 cd ..
