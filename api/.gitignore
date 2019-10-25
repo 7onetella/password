@@ -3,6 +3,7 @@ api_linux_arm
 passwords.bleve
 *.nomad.*
 *.out
-*.pem
 ui/*
 bindata.go
+keepass-crt.pem
+keepass-key.pem

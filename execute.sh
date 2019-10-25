@@ -15,11 +15,12 @@ build() {
   ./build.sh dev
 
   cd api
-  
+
   # get gox for cross compilation
   go get -u github.com/mitchellh/gox
 
-  ${GOPATH}/bin/gox -osarch="linux/arm linux/amd64"
+  # ${GOPATH}/bin/gox -osarch="linux/arm linux/amd64"
+  ${GOPATH}/bin/gox -osarch="linux/amd64"
 
   # get jenkins server cpu architecture
   arch=$(lscpu | grep Archi | awk '{ print $2 }')
