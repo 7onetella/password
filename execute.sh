@@ -14,6 +14,8 @@ build() {
 
   ./build.sh dev
 
+  cd api
+  
   # get gox for cross compilation
   go get -u github.com/mitchellh/gox
 
