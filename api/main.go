@@ -6,15 +6,14 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/markbates/refresh/refresh/web"
 )
 
-var host string
-var httpPort string
+var stage string
+var port string
 var db *sql.DB
 var hmacSecret = []byte("")
 
@@ -25,49 +24,30 @@ var URLBase string
 var Version string
 
 func init() {
-	stage := os.Getenv("STAGE")
+	stage = os.Getenv("STAGE")
 
-	serverAddr := GetEnvWithDefault("SERVER_ADDR", stage)
-	terms := strings.Split(serverAddr, ":")
-	host = terms[0]
-	httpPort = terms[1]
+	port = GetEnvWithDefault("HTTP_PORT", "4242")
 
-	URLBase = fmt.Sprintf("http://%s:%s/api", host, httpPort)
+	URLBase = fmt.Sprintf("http://%s:%s/api", stage, port)
 
-	connStr := GetEnvWithDefault("DB_CONNSTR", stage)
+	connStr := GetEnvWithDefault("DB_CONNSTR", "postgres://dev:dev114@localhost/devdb")
 	dbinst, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic("error while opening db connection")
 	}
 	db = dbinst
 
-	cryptoToken := GetEnvWithDefault("CRYPTO_TOKEN", stage)
-	if len(cryptoToken) == 0 {
-		log.Println("CRYPTO_TOKEN is empty")
-		return
-	}
+	cryptoToken := GetEnvWithDefault("CRYPTO_TOKEN", "crypto_token_12345")
 	hmacSecret = []byte(cryptoToken)
 }
 
 // GetEnvWithDefault attemps to retrieve from env. default calculated based on stage if env value empty.
-func GetEnvWithDefault(env, stage string) string {
-
-	if env == "DB_CONNSTR" {
-		return fmt.Sprintf("postgres://%s:%s114@%s/devdb", stage, stage, stage)
+func GetEnvWithDefault(env, defaultV string) string {
+	v := os.Getenv(env)
+	if v == "" {
+		return defaultV
 	}
-
-	if env == "SERVER_ADDR" {
-		if stage == "localhost" {
-			return fmt.Sprintf("%s:4242", stage)
-		}
-		return fmt.Sprintf("%s:443", stage)
-	}
-
-	if env == "CRYPTO_TOKEN" {
-		return fmt.Sprintf("%s_crypto_token", stage)
-	}
-
-	return ""
+	return v
 }
 
 func main() {
@@ -98,10 +78,10 @@ func main() {
 	})
 
 	http.Handle("/", r)
-	log.Println("starting https server on port " + httpPort)
+	log.Println("starting https server on port " + port)
 
 	srv := &http.Server{
-		Addr: fmt.Sprintf("0.0.0.0:%s", httpPort),
+		Addr: fmt.Sprintf("0.0.0.0:%s", port),
 		// Good practice to set timeouts to avoid Slowloris attacks.
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,
@@ -110,12 +90,11 @@ func main() {
 	}
 
 	// credit goes to https://stackoverflow.com/a/41617233
-	go http.ListenAndServe(":80", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Println("redirecting http request to https")
-		url := "https://" + r.Host + r.URL.String()
-		http.Redirect(w, r, url, http.StatusMovedPermanently)
-	}))
+	// go http.ListenAndServe(":80", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	// 	log.Println("redirecting http request to https")
+	// 	url := "https://" + r.Host + r.URL.String()
+	// 	http.Redirect(w, r, url, http.StatusMovedPermanently)
+	// }))
 
-	log.Println("host:", host)
-	log.Fatal(srv.ListenAndServeTLS(host+"-crt.pem", host+"-key.pem"))
+	log.Fatal(srv.ListenAndServeTLS(stage+"-crt.pem", stage+"-key.pem"))
 }

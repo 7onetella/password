@@ -6,7 +6,7 @@ build() {
 
   # export DB_CONNSTR="postgres://dev:dev114@localhost/devdb"
 
-  # export SERVER_ADDR=localhost:4242
+  # export HTTP_PORT=4242
 
   # export CRYPTO_TOKEN=test_crypto_token
 
