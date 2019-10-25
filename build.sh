@@ -14,7 +14,7 @@ echo current location is $(pwd)
 go get github.com/jteeuwen/go-bindata/...
 go get github.com/elazarl/go-bindata-assetfs/...
 
-PATH=$PATH:.:~
+PATH=$PATH:.:~/bin
 echo PATH = ${PATH}
 
 which go-bindata-assetfs
