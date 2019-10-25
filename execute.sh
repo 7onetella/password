@@ -12,6 +12,8 @@ build() {
 
   # go test -v ./...
 
+  go version
+
   go build ./...
 
   ./build.sh dev
