@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Release') {
             steps {
-                sh label: 'Releasing', script: './execute.sh release'
+                // sh label: 'Releasing', script: './execute.sh release'
             }
         }
     }
