@@ -7,6 +7,6 @@ rm -rf dist/* && ember build --environment=${1} && cp -r dist/* ../api/ui/
 
 cd ../api
 
-go-bindata-assetfs ui/...
+~/bin/go-bindata-assetfs ui/...
 
 cd ..
