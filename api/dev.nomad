@@ -42,7 +42,7 @@ job "password" {
       # The service block tells Nomad how to register this service
       # with Consul for service discovery and monitoring.
       service {
-        tags = ["urlprefix-/api"]
+        tags = ["urlprefix-dev/"]
         
         # This tells Consul to monitor the service on the port
         # labelled "http". Since Nomad allocates high dynamic port
