@@ -1,6 +1,8 @@
 #!/bin/sh
 set -x
 
+mkdir -p api/ui/
+
 cd ui
 
 npm install
