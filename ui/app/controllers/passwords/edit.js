@@ -8,11 +8,15 @@ export default Controller.extend({
   actions: {
     savePassword(password) {
       console.log("/controllers/passwords/edit.js");
+      console.log("  tags: "+password.tags);
+      console.log("  tags typeof: "+typeof(password.tags));
 
       this.store.findRecord('password', password.id).then(function(record) {
-        console.log("  tags: "+password.tags);
-        var tags = password.tags.split(",");
-        record.set("tags", tags);
+        // if tags are coming in arrays, don't turn it into array
+        if (typeof(password.tags) !== "object") {          
+          var tags = password.tags.split(",");
+          record.set("tags", tags);
+        }
         record.save(); // => PATCH to '/passwords/id'
       });
 
