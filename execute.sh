@@ -3,7 +3,7 @@
 set -x
 
 build() {
-  
+
   # export DB_CONNSTR="postgres://dev:dev114@localhost/devdb"
 
   # export SERVER_ADDR=localhost:4242
@@ -12,7 +12,7 @@ build() {
 
   # go test -v ./...
 
-  build dev
+  ./build.sh dev
 
   # get gox for cross compilation
   go get -u github.com/mitchellh/gox
