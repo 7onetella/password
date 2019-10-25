@@ -57,10 +57,10 @@ deploy() {
   rm ./api_dev_${BUILD_ID}.tar
 
   # schedule a deployment
-  cat ./password-api-dev.nomad | sed 's|BUILD_ID|'"${BUILD_ID}"'|g' > password-api-dev.nomad.${BUILD_ID}
+  cat ./dev.nomad | sed 's|BUILD_ID|'"${BUILD_ID}"'|g' > dev.nomad.${BUILD_ID}
   export NOMAD_ADDR=http://localhost:4646
-  nomad job run ./password-api-dev.nomad.${BUILD_ID}
-  rm ./password-api-dev.nomad.${BUILD_ID}
+  nomad job run ./dev.nomad.${BUILD_ID}
+  rm ./dev.nomad.${BUILD_ID}
 }
 
 release() {
@@ -72,7 +72,7 @@ release() {
 
   export NOMAD_ADDR=http://nomad.7onetella.net:4646
   # schedule a deployment
-  nomad job run ./password-api-prod.nomad
+  nomad job run ./prod.nomad
 }
 
 case $1 in
