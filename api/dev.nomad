@@ -49,14 +49,22 @@ job "password" {
         # numbers, we use labels to refer to them.
         port = "http"
 
+        // check {
+        //   type     = "http"
+        //   protocol = "https"
+        //   path     = "/api/health"
+        //   interval = "10s"
+        //   timeout  = "2s"
+        //   tls_skip_verify = true
+        // }
+
         check {
           type     = "http"
-          protocol = "https"
           path     = "/api/health"
           interval = "10s"
           timeout  = "2s"
-          tls_skip_verify = true
         }
+
       }
 
       # It is possible to set environment variables which will be

@@ -25,7 +25,7 @@ var URLBase string
 var Version string
 
 func init() {
-	stage = os.Getenv("STAGE")
+	stage = GetEnvWithDefault("STAGE", "localhost")
 
 	port = GetEnvWithDefault("HTTP_PORT", "4242")
 
@@ -97,11 +97,13 @@ func main() {
 	// 	http.Redirect(w, r, url, http.StatusMovedPermanently)
 	// }))
 
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(dir)
+	// dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println(dir)
 
-	log.Fatal(srv.ListenAndServeTLS(dir+"/"+stage+"-crt.pem", dir+"/"+stage+"-key.pem"))
+	// log.Fatal(srv.ListenAndServeTLS(dir+"/"+stage+"-crt.pem", dir+"/"+stage+"-key.pem"))
+
+	log.Fatal(srv.ListenAndServe())
 }
