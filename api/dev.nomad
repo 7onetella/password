@@ -27,7 +27,7 @@ job "password" {
     # task utilizes a Docker container to front a web application.
     task "api" {
       artifact {
-        source      = "http://nas.7onetella.net/uploads/api_dev_BUILD_ID.tar"
+        source      = "http://nas.7onetella.net/uploads/api_dev_BUILD_ID.tar.gz"
       }
 
       # Specify the driver to be "docker". Nomad supports
