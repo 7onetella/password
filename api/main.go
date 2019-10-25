@@ -67,7 +67,7 @@ func main() {
 		log.Println("/favicon")
 		w.Write([]byte{})
 	})
-	r.Path("/api/health").Methods("GET").HandlerFunc(AuthRequired(HealthCheckHandler))
+	r.Path("/api/health").Methods("GET").HandlerFunc(HealthCheckHandler)
 	r.Path("/api/version").Methods("GET").HandlerFunc(VersionHandler)
 	r.Path("/api/token-refresh").Methods("POST").HandlerFunc(TokenRefreshHandler)
 	r.Path("/api/signin").Methods("POST").HandlerFunc(SigninRequestHandler)
