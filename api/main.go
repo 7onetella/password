@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -96,5 +97,11 @@ func main() {
 	// 	http.Redirect(w, r, url, http.StatusMovedPermanently)
 	// }))
 
-	log.Fatal(srv.ListenAndServeTLS(stage+"-crt.pem", stage+"-key.pem"))
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(dir)
+
+	log.Fatal(srv.ListenAndServeTLS(dir+"/"+stage+"-crt.pem", dir+"/"+stage+"-key.pem"))
 }
