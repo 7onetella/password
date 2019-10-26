@@ -12,9 +12,15 @@ build() {
 
   # go test -v ./...
 
-  ui/build.sh dev
+  # execute in api project
+  DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+  cd "$DIR" || exit
 
-  api/build.sh
+  cd "$DIR/ui"
+  ./build.sh dev
+
+  cd "$DIR/api"
+  ./build.sh
 
   # get jenkins server cpu architecture
   arch=$(lscpu | grep Archi | awk '{ print $2 }')
