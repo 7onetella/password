@@ -3,7 +3,7 @@ set -x
 
 # execute in api project
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd "$DIR" || exit
+cd "$DIR/api" || exit
 
 mkdir -p ui/
 cp -r ../ui/dist/* ./ui/
