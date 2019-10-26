@@ -1,6 +1,7 @@
 config.yml
 api
 api_linux_arm
+api_linux_amd64
 passwords.bleve
 *.nomad.*
 *.out
