@@ -15,7 +15,7 @@ type IDClaims struct {
 
 // EncodeID signs id
 func EncodeID(id string) (string, time.Time, error) {
-	expTime := time.Now().Add(20 * time.Second)
+	expTime := time.Now().Add(120 * time.Second)
 	claim := IDClaims{
 		ID: id,
 		StandardClaims: jwt.StandardClaims{

@@ -37,7 +37,7 @@ module.exports = function(environment) {
       tokenExpirationInvalidateSession: true, // Enables session invalidation on token expiration
       tokenExpireName: 'exp', // Field containing token expiration      
       refreshAccessTokens: true,
-      refreshLeeway: 10, // refresh 0.1 minutes (10 seconds) before expiration
+      refreshLeeway: 60, // refresh 0.1 minutes (10 seconds) before expiration
       serverTokenRefreshEndpoint: 'http://localhost:4242/api/token-refresh', // Server endpoint to send refresh request
       refreshTokenPropertyName: 'token', // Key in server response that contains the refresh token
     };     
@@ -66,7 +66,7 @@ module.exports = function(environment) {
       tokenExpirationInvalidateSession: true, // Enables session invalidation on token expiration
       tokenExpireName: 'exp', // Field containing token expiration      
       refreshAccessTokens: true,
-      refreshLeeway: 10, // refresh 0.1 minutes (10 seconds) before expiration
+      refreshLeeway: 60, // refresh 0.1 minutes (10 seconds) before expiration
       serverTokenRefreshEndpoint: 'http://dev.7onetella.net:9999/api/token-refresh', // Server endpoint to send refresh request
       refreshTokenPropertyName: 'token', // Key in server response that contains the refresh token
     }
@@ -81,7 +81,7 @@ module.exports = function(environment) {
       tokenExpirationInvalidateSession: true, // Enables session invalidation on token expiration
       tokenExpireName: 'exp', // Field containing token expiration      
       refreshAccessTokens: true,
-      refreshLeeway: 10, // refresh 0.1 minutes (10 seconds) before expiration
+      refreshLeeway: 60, // refresh 0.1 minutes (10 seconds) before expiration
       serverTokenRefreshEndpoint: 'https://keepass/api/token-refresh', // Server endpoint to send refresh request
       refreshTokenPropertyName: 'token', // Key in server response that contains the refresh token
     }
