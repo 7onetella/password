@@ -33,7 +33,7 @@ func TestDecodeToken(t *testing.T) {
 
 	spec.When("DecodeToken(" + tokenString + ")")
 
-	ID, err := DecodeToken(tokenString)
+	ID, _, err := DecodeToken(tokenString)
 
 	spec.AssertAndFailNow(err == nil, "error is nil", err)
 

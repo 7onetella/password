@@ -2,6 +2,7 @@ package client
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -15,18 +16,27 @@ import (
 
 // PasswordService password service
 type PasswordService struct {
-	serverAddr    string
-	Authorization string
+	serverAddr         string
+	Authorization      string
+	InsecureSkipVerify bool
 }
 
 // NewPasswordService returns new instance of password service
 func NewPasswordService() (*PasswordService, error) {
+	ps := &PasswordService{}
+
 	serverAddr, exists := os.LookupEnv("SERVER_ADDR")
 	if !exists {
 		return nil, errors.New("SERVER_ADDR environment variable not set")
 	}
+	ps.serverAddr = serverAddr
 
-	return &PasswordService{serverAddr: serverAddr}, nil
+	insecure := os.Getenv("INSECURE")
+	if insecure == "true" {
+		ps.InsecureSkipVerify = true
+	}
+
+	return ps, nil
 }
 
 // RestfulService restful service
@@ -36,12 +46,12 @@ type RestfulService interface {
 
 // GetEndpoint returns endpoint base url
 func (ps *PasswordService) GetEndpoint() string {
-	return fmt.Sprintf("http://%s/api/passwords", ps.serverAddr)
+	return fmt.Sprintf("https://%s/api/passwords", ps.serverAddr)
 }
 
 // CallEndpoint calls endpoint
-func CallEndpoint(url, method, authorization string, v interface{}, o interface{}) (interface{}, error) {
-	data, err := httpAction(url, method, authorization, v)
+func CallEndpoint(url, method, authorization string, insecureSkipVerify bool, v interface{}, o interface{}) (interface{}, error) {
+	data, err := httpAction(url, method, authorization, insecureSkipVerify, v)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +68,7 @@ func CallEndpoint(url, method, authorization string, v interface{}, o interface{
 
 // Signin authenticates
 func (ps *PasswordService) Signin(input model.Credentials) error {
-	o, err := CallEndpoint("http://"+ps.serverAddr+"/api/signin", "POST", "", &input, &model.AuthToken{})
+	o, err := CallEndpoint("https://"+ps.serverAddr+"/api/signin", "POST", "", ps.InsecureSkipVerify, &input, &model.AuthToken{})
 	if err != nil {
 		return err
 	}
@@ -71,7 +81,7 @@ func (ps *PasswordService) Signin(input model.Credentials) error {
 
 // CreatePassword creates password
 func (ps *PasswordService) CreatePassword(input model.PasswordInput) (*model.PasswordOutput, error) {
-	o, err := CallEndpoint(ps.GetEndpoint(), "POST", ps.Authorization, &input, &model.PasswordOutput{})
+	o, err := CallEndpoint(ps.GetEndpoint(), "POST", ps.Authorization, ps.InsecureSkipVerify, &input, &model.PasswordOutput{})
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +92,7 @@ func (ps *PasswordService) CreatePassword(input model.PasswordInput) (*model.Pas
 // ReadPassword creates password
 func (ps *PasswordService) ReadPassword(ID string) (*model.PasswordOutput, error) {
 
-	o, err := CallEndpoint(ps.GetEndpoint()+"/"+ID, "GET", ps.Authorization, nil, &model.PasswordOutput{})
+	o, err := CallEndpoint(ps.GetEndpoint()+"/"+ID, "GET", ps.Authorization, ps.InsecureSkipVerify, nil, &model.PasswordOutput{})
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +104,7 @@ func (ps *PasswordService) ReadPassword(ID string) (*model.PasswordOutput, error
 // UpdatePassword updates password
 func (ps *PasswordService) UpdatePassword(input model.PasswordInput) error {
 
-	_, err := CallEndpoint(ps.GetEndpoint()+"/"+input.Data.ID, "PATCH", ps.Authorization, &input, nil)
+	_, err := CallEndpoint(ps.GetEndpoint()+"/"+input.Data.ID, "PATCH", ps.Authorization, ps.InsecureSkipVerify, &input, nil)
 	if err != nil {
 		return err
 	}
@@ -106,7 +116,7 @@ func (ps *PasswordService) UpdatePassword(input model.PasswordInput) error {
 // DeletePassword deletes password
 func (ps *PasswordService) DeletePassword(ID string) error {
 
-	_, err := CallEndpoint(ps.GetEndpoint()+"/"+ID, "DELETE", ps.Authorization, nil, nil)
+	_, err := CallEndpoint(ps.GetEndpoint()+"/"+ID, "DELETE", ps.Authorization, ps.InsecureSkipVerify, nil, nil)
 	if err != nil {
 		return err
 	}
@@ -118,7 +128,7 @@ func (ps *PasswordService) DeletePassword(ID string) error {
 // ListPasswords finds passwords by title
 func (ps *PasswordService) ListPasswords(input model.ListPasswordsInput) (*model.ListPasswordsOutput, error) {
 
-	o, err := CallEndpoint(ps.GetEndpoint()+"?title="+input.Title, "GET", ps.Authorization, nil, &model.ListPasswordsOutput{})
+	o, err := CallEndpoint(ps.GetEndpoint()+"?title="+input.Title, "GET", ps.Authorization, ps.InsecureSkipVerify, nil, &model.ListPasswordsOutput{})
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +137,7 @@ func (ps *PasswordService) ListPasswords(input model.ListPasswordsInput) (*model
 
 }
 
-func httpAction(url, method string, authorization string, v interface{}) ([]byte, error) {
+func httpAction(url, method string, authorization string, insecureSkipVerify bool, v interface{}) ([]byte, error) {
 	var r io.Reader
 	if v != nil {
 		b, err := json.Marshal(v)
@@ -143,7 +153,12 @@ func httpAction(url, method string, authorization string, v interface{}) ([]byte
 	}
 	req.Header.Add("Authorization", authorization)
 
-	res, err := http.DefaultClient.Do(req)
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureSkipVerify},
+	}
+	client := &http.Client{Transport: tr}
+
+	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
