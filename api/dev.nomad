@@ -42,7 +42,7 @@ job "password" {
       # The service block tells Nomad how to register this service
       # with Consul for service discovery and monitoring.
       service {
-        tags = ["urlprefix-dev.7onetella.net:9999/"]
+        # tags = ["urlprefix-dev.7onetella.net:9999/"]
         
         # This tells Consul to monitor the service on the port
         # labelled "http". Since Nomad allocates high dynamic port
@@ -90,7 +90,9 @@ EOH
         network {
           mbits = 10
 
-          port "http" {}
+          port "http" {
+            static = "4242" 
+          }
         }
       }
     }
