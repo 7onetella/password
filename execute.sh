@@ -4,14 +4,6 @@ set +x
 
 build() {
 
-  # export DB_CONNSTR="postgres://dev:dev114@localhost/devdb"
-
-  # export HTTP_PORT=4242
-
-  # export CRYPTO_TOKEN=test_crypto_token
-
-  # go test -v ./...
-
   # execute in api project
   DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -64,6 +56,13 @@ deploy() {
   rm ./dev.nomad.${BUILD_ID}
 }
 
+run_test() {
+  export DB_CONNSTR="postgres://dev:dev114@localhost/devdb"
+  export SERVER_ADDR=dev:4242
+  export INSECURE=true
+  go test -v ./...
+}
+
 release() {
   cd api
   # upload to file server
@@ -82,6 +81,9 @@ build)
   ;;
 deploy)
   deploy 
+  ;;
+test)
+  run_test
   ;;
 release)
   release 
