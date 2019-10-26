@@ -57,6 +57,7 @@ deploy() {
 }
 
 run_test() {
+  echo current location is $(pwd)
   export DB_CONNSTR="postgres://dev:dev114@localhost/devdb"
   export SERVER_ADDR=dev:4242
   export INSECURE=true
