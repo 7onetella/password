@@ -52,7 +52,8 @@ deploy() {
 
   tar czvf api_dev_${BUILD_ID}.tar.gz api_linux_amd64_${BUILD_ID} dev-*.pem
 
-  scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no api_dev_${BUILD_ID}.tar.gz pi@nas.7onetella.net:/mnt/uploads
+  # scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no api_dev_${BUILD_ID}.tar.gz pi@nas.7onetella.net:/mnt/uploads
+  cp api_dev_${BUILD_ID}.tar.gz /mnt/uploads
   rm ./api_linux_amd64_${BUILD_ID}
   rm ./api_dev_${BUILD_ID}.tar.gz
 
