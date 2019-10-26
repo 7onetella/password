@@ -480,3 +480,13 @@ func WriteServerError(err error, message string, w http.ResponseWriter) {
 func LogPasswordRequest(passwordRequest model.PasswordInput) {
 	log.Println("rid:", getUUID(), "received:", passwordRequest.Data)
 }
+
+// Port80toHTTPSRedirectHandler redirects to https
+func Port80toHTTPSRedirectHandler() http.Handler {
+	//credit goes to https://stackoverflow.com/a/41617233
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Println("redirecting http request to https")
+		url := "https://" + r.Host + r.URL.String()
+		http.Redirect(w, r, url, http.StatusMovedPermanently)
+	})
+}

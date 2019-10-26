@@ -6,8 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	// "path/filepath"
+	"path/filepath"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -53,6 +52,8 @@ func GetEnvWithDefault(env, defaultV string) string {
 }
 
 func main() {
+	log.Println("stage:", stage)
+
 	r := mux.NewRouter()
 
 	r.Methods("OPTIONS").HandlerFunc(PreflightOptionsHandler)
@@ -91,20 +92,21 @@ func main() {
 		Handler:      web.ErrorChecker(r), // Pass our instance of gorilla/mux in.
 	}
 
-	// credit goes to https://stackoverflow.com/a/41617233
-	// go http.ListenAndServe(":80", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	// 	log.Println("redirecting http request to https")
-	// 	url := "https://" + r.Host + r.URL.String()
-	// 	http.Redirect(w, r, url, http.StatusMovedPermanently)
-	// }))
+	if stage == "production" {
+		go log.Fatal(http.ListenAndServe(":80", Port80toHTTPSRedirectHandler()))
+	}
 
-	// dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// fmt.Println(dir)
+	log.Fatal(srv.ListenAndServeTLS(GetCertAndKey()))
+}
 
-	// log.Fatal(srv.ListenAndServeTLS(dir+"/"+stage+"-crt.pem", dir+"/"+stage+"-key.pem"))
+// GetCertAndKey return cert and key locations
+func GetCertAndKey() (string, string) {
+	// this will resolve to refresh or api
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("workfolder:", dir)
 
-	log.Fatal(srv.ListenAndServe())
+	return dir + "/" + stage + "-crt.pem", dir + "/" + stage + "-key.pem"
 }

@@ -17,7 +17,7 @@ build() {
   cd "$DIR" || exit
 
   cd "$DIR/ui"
-  ./build.sh dev
+  ./build.sh 
 
   cd "$DIR/api"
   ./build.sh

@@ -1,5 +1,5 @@
 #!/bin/sh
-set -x
+set +x
 
 npm install
 rm -rf dist/*

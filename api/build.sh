@@ -1,12 +1,14 @@
 #!/bin/sh
-set -x
+set +x
 
+echo copying the emberjs asset from ui/dist/*
 mkdir -p ui/
 cp -r ../ui/dist/* ./ui/
 
 # Jenkins path can be missing this
 PATH=$PATH:.:~/bin
 
+echo generate go asset .go file
 go-bindata-assetfs ui/...
 
 go build ./...
@@ -15,5 +17,6 @@ go build ./...
 go get -u github.com/mitchellh/gox
 
 # ${GOPATH}/bin/gox -osarch="linux/arm linux/amd64"
-${GOPATH}/bin/gox -osarch="linux/amd64"
+echo cross compile
+"${GOPATH}"/bin/gox -osarch="linux/amd64"
 
