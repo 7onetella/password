@@ -3,4 +3,4 @@ set -x
 
 npm install
 rm -rf dist/*
-ember build --environment=${1} 
+ember build --environment=production 
