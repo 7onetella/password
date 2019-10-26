@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-set -x
+set +x
 
 build() {
 
@@ -14,6 +14,7 @@ build() {
 
   # execute in api project
   DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
   cd "$DIR" || exit
 
   cd "$DIR/ui"
@@ -48,15 +49,15 @@ build() {
 
 deploy() {
   cd api
-  # upload to file server
 
+  echo uploading to file server
   tar czvf api_dev_${BUILD_ID}.tar.gz api_linux_amd64_${BUILD_ID} dev-*.pem
 
   scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no api_dev_${BUILD_ID}.tar.gz pi@nas.7onetella.net:/mnt/uploads
   rm ./api_linux_amd64_${BUILD_ID}
   rm ./api_dev_${BUILD_ID}.tar.gz
 
-  # schedule a deployment
+  echo scheduling deployment
   cat ./dev.nomad | sed 's|BUILD_ID|'"${BUILD_ID}"'|g' > dev.nomad.${BUILD_ID}
   export NOMAD_ADDR=http://localhost:4646
   nomad job run ./dev.nomad.${BUILD_ID}
