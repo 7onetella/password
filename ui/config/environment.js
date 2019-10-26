@@ -23,6 +23,18 @@ module.exports = function(environment) {
     }
   };
 
+  ENV['ember-simple-auth-token'] = {
+    serverTokenEndpoint: '/api/signin',
+    serverTokenRefreshEndpoint: '/api/token-refresh',
+    tokenPropertyName: 'token', // Key in server response that contains the access token
+    headers: {}, // Headers to add to the    
+    tokenExpirationInvalidateSession: true, // Enables session invalidation on token expiration
+    tokenExpireName: 'exp', // Field containing token expiration      
+    refreshAccessTokens: true,
+    refreshLeeway: 60, // refresh 0.1 minutes (10 seconds) before expiration
+    refreshTokenPropertyName: 'token', // Key in server response that contains the refresh token
+  };       
+
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
@@ -30,19 +42,9 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
 
-    ENV['ember-simple-auth-token'] = {
-      serverTokenEndpoint: 'http://localhost:4242/api/signin', // Server endpoint to send authenticate request
-      tokenPropertyName: 'token', // Key in server response that contains the access token
-      headers: {}, // Headers to add to the    
-      tokenExpirationInvalidateSession: true, // Enables session invalidation on token expiration
-      tokenExpireName: 'exp', // Field containing token expiration      
-      refreshAccessTokens: true,
-      refreshLeeway: 60, // refresh 0.1 minutes (10 seconds) before expiration
-      serverTokenRefreshEndpoint: 'http://localhost:4242/api/token-refresh', // Server endpoint to send refresh request
-      refreshTokenPropertyName: 'token', // Key in server response that contains the refresh token
-    };     
-
-    ENV.APP.JSONAPIAdaptetHost = 'http://localhost:4242';
+    ENV['ember-simple-auth-token'].serverTokenEndpoint = 'https://localhost:4242/api/signin'
+    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = 'https://localhost:4242/api/token-refresh'
+    ENV.APP.JSONAPIAdaptetHost = 'https://localhost:4242';
   }
 
   if (environment === 'test') {
@@ -55,36 +57,6 @@ module.exports = function(environment) {
 
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;
-  }
-
-  if (environment === 'dev') {
-    // here you can enable a production-specific feature
-    ENV['ember-simple-auth-token'] = {
-      serverTokenEndpoint: 'http://dev.7onetella.net:9999/api/signin', // Server endpoint to send authenticate request
-      tokenPropertyName: 'token', // Key in server response that contains the access token
-      headers: {}, // Headers to add to the    
-      tokenExpirationInvalidateSession: true, // Enables session invalidation on token expiration
-      tokenExpireName: 'exp', // Field containing token expiration      
-      refreshAccessTokens: true,
-      refreshLeeway: 60, // refresh 0.1 minutes (10 seconds) before expiration
-      serverTokenRefreshEndpoint: 'http://dev.7onetella.net:9999/api/token-refresh', // Server endpoint to send refresh request
-      refreshTokenPropertyName: 'token', // Key in server response that contains the refresh token
-    }
-  }
-
-  if (environment === 'production') {
-    // here you can enable a production-specific feature
-    ENV['ember-simple-auth-token'] = {
-      serverTokenEndpoint: 'https://keepass/api/signin', // Server endpoint to send authenticate request
-      tokenPropertyName: 'token', // Key in server response that contains the access token
-      headers: {}, // Headers to add to the    
-      tokenExpirationInvalidateSession: true, // Enables session invalidation on token expiration
-      tokenExpireName: 'exp', // Field containing token expiration      
-      refreshAccessTokens: true,
-      refreshLeeway: 60, // refresh 0.1 minutes (10 seconds) before expiration
-      serverTokenRefreshEndpoint: 'https://keepass/api/token-refresh', // Server endpoint to send refresh request
-      refreshTokenPropertyName: 'token', // Key in server response that contains the refresh token
-    }
   }
 
   return ENV;
