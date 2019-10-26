@@ -12,9 +12,9 @@ build() {
 
   # go test -v ./...
 
-  ./ui/build.sh dev
+  ui/build.sh dev
 
-  ./api/build.sh
+  api/build.sh
 
   # get jenkins server cpu architecture
   arch=$(lscpu | grep Archi | awk '{ print $2 }')
