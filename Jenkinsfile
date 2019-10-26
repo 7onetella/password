@@ -10,7 +10,8 @@ pipeline {
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                input 'continue?'
+                sh label: 'Test',       script: './execute.sh test'
             }
         }
         stage('Release') {
