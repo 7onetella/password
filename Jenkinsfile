@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                echo test place holder
+                sh label: 'Test',       script: 'echo test place holder'
             }
         }
         stage('Release') {
