@@ -7,6 +7,8 @@ export default Route.extend({
     // console.log("/routes/passwords.js model()");
     // console.log("  searchtext: " + searchtext);
 
-    return this.store.findAll("password", { reload: true });
+    // reload true results in error when delete is initiated
+    // need a way to let force user to wait
+    return this.store.findAll("password");
   }
 });
