@@ -3,7 +3,7 @@ import Route from '@ember/routing/route';
 
 export default Route.extend({  
   model() {
-    var searchtext = "%";
+    // var searchtext = "%";
     // console.log("/routes/passwords.js model()");
     // console.log("  searchtext: " + searchtext);
 

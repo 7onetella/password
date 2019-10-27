@@ -19,7 +19,7 @@ export default Controller.extend({
         // console.log("  authentication successful. redirecting to listing page");
         that.get('router').transitionTo('/passwords');
       },function(reason) {
-        // console.log("  reason:" + reason);
+        console.warn("  reason:" + reason);
         that.set("loginFailed", true);
       });
 
