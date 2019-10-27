@@ -229,8 +229,8 @@ func SigninRequestHandler(w http.ResponseWriter, req *http.Request) {
 	}
 	var cred model.Credentials
 	json.Unmarshal(data, &cred)
-	if cred.Username == "admin" && cred.Password == "password" {
-		tokenString, expTime, err := EncodeID("admin")
+	if cred.Username == Username && cred.Password == Password {
+		tokenString, expTime, err := EncodeID(Username)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return

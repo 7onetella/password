@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -17,6 +18,8 @@ var stage string
 var port string
 var db *sql.DB
 var hmacSecret = []byte("")
+var Username string
+var Password string
 
 // URLBase url base for next link
 var URLBase string
@@ -40,6 +43,11 @@ func init() {
 
 	cryptoToken := GetEnvWithDefault("CRYPTO_TOKEN", "crypto_token_12345")
 	hmacSecret = []byte(cryptoToken)
+
+	credential := GetEnvWithDefault("CREDENTIAL", "admin:password")
+	terms := strings.Split(credential, ":")
+	Username = terms[0]
+	Password = terms[1]
 }
 
 // GetEnvWithDefault attemps to retrieve from env. default calculated based on stage if env value empty.
