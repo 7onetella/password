@@ -7,7 +7,7 @@ export default Controller.extend({
 
   actions: {
     savePassword(password) {
-      console.log("/controllers/passwords/edit.js");
+      console.log("/controllers/passwords/edit.js savePassword()");
       console.log("  tags: "+password.tags);
       console.log("  tags typeof: "+typeof(password.tags));
 
@@ -22,8 +22,12 @@ export default Controller.extend({
 
       this.get('router').transitionTo('/passwords')    
     },
+    cancel(password) {
+      console.log("/controllers/passwords/edit.js cancel()");
+      this.get('router').transitionTo('/passwords');
+    },
     deletePassword(password) {
-      console.log("/controllers/passwords/edit.js");
+      console.log("/controllers/passwords/edit.js deletePassword()");
       
       if (confirm("Are you sure?")) {
         this.store.findRecord('password', password.id, { backgroundReload: false }).then(function(record) {
