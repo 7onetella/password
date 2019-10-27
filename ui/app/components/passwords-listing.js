@@ -1,4 +1,4 @@
-/*eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
+/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Component from '@ember/component';
 import {inject as service} from '@ember/service'
 import { get } from '@ember/object';
@@ -12,16 +12,16 @@ export default Component.extend({
 
   actions: {
     edit(password) {
-      console.log("/components/passwords.js edit()")
-      console.log("  id: "+password.id);
+      // console.log("/components/passwords.js edit()")
+      // console.log("  id: "+password.id);
 
       this.get('router').transitionTo('/passwords/edit/' + password.id)    
     },
     search() {
-      console.log("/components/passwords.js search()")
+      // console.log("/components/passwords.js search()")
   
       var searchtext = this.get('searchtext');
-      console.log("  searchtext: " + searchtext)
+      // console.log("  searchtext: " + searchtext)
 
       var that = this
       this.store.query('password', {
@@ -34,7 +34,7 @@ export default Component.extend({
       });
     },
     getPassword(password) {
-      console.log("/components/passwords.js getPassword()");
+      // console.log("/components/passwords.js getPassword()");
       return password.password;
     },
     onSuccess() {

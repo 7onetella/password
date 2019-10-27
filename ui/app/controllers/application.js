@@ -1,4 +1,4 @@
-/*eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
+/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Controller from '@ember/controller';
 import { inject } from '@ember/service';
 import { get, computed } from '@ember/object';
@@ -13,7 +13,7 @@ export default Controller.extend({
     this._super(...arguments);
     this.get('userIdle').on('idleChanged', (isIdle) => {
       // isIdle is true if idle. False otherwise.
-      console.log("user idle: " + isIdle)
+      // console.log("user idle: " + isIdle)
       if (isIdle === true) {
         this.get('session').invalidate();
       }
