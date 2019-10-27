@@ -1,1 +1,14 @@
 @import "ember-cli-bootstrap-4/bootstrap";
+
+/* app.scss custom css */
+#signindiv, #signinalertdiv {
+    width: 18rem;
+}
+
+#aboutdiv {
+    width: 18rem;
+}
+
+td.clickable {
+    cursor: pointer;
+}
