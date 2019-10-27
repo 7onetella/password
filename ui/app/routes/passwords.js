@@ -7,6 +7,6 @@ export default Route.extend({
     console.log("/routes/passwords.js model()");
     console.log("  searchtext: " + searchtext);
 
-    return this.store.findAll("password");
+    return this.store.findAll("password", { reload: true });
   }
 });
