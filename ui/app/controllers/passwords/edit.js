@@ -22,7 +22,7 @@ export default Controller.extend({
 
       this.get('router').transitionTo('/passwords')    
     },
-    cancel(password) {
+    cancel() {
       console.log("/controllers/passwords/edit.js cancel()");
       this.get('router').transitionTo('/passwords');
     },
