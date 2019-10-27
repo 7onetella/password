@@ -21,3 +21,11 @@ Releasing
 rm -r dist/* && ember build --environment=production && cp -r dist/* ../api/ui/
 
 go-bindata-assetfs ui/...
+
+how to package homebrew
+https://www.prodops.io/blog/creating-homebrew-taps-for-private-internal-tools
+
+tool for releasing
+https://goreleaser.com/
+
+
