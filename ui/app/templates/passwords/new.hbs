@@ -21,9 +21,9 @@
     <label for="notes">Notes</label>
     {{input type="text" class="form-control" value=this.model.notes}}
   </div>
-  <div class="form-group">
+  {{!-- <div class="form-group">
     <label for="tags">Tags</label>
     {{input type="text" class="form-control" value=this.model.tags}}
-  </div>
+  </div> --}}
   <button type="button" {{action "savePassword" this.model}} class="btn btn-primary">Save</button>
 </form>
