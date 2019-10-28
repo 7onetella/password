@@ -487,6 +487,8 @@ func Port80toHTTPSRedirectHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Println("redirecting http request to https")
 		url := "https://" + r.Host + r.URL.String()
+		log.Println("url:", url)
 		http.Redirect(w, r, url, http.StatusMovedPermanently)
+		log.Println("redirect completed")
 	})
 }
