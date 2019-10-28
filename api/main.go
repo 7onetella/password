@@ -18,8 +18,7 @@ var stage string
 var port string
 var db *sql.DB
 var hmacSecret = []byte("")
-var Username string
-var Password string
+var admins map[string]string = map[string]string{}
 
 // URLBase url base for next link
 var URLBase string
@@ -44,10 +43,13 @@ func init() {
 	cryptoToken := GetEnvWithDefault("CRYPTO_TOKEN", "crypto_token_12345")
 	hmacSecret = []byte(cryptoToken)
 
-	credential := GetEnvWithDefault("CREDENTIAL", "admin:password")
-	terms := strings.Split(credential, ":")
-	Username = terms[0]
-	Password = terms[1]
+	v := GetEnvWithDefault("CREDENTIAL", "admin:password")
+	credentials := strings.Split(v, ";")
+	for _, credential := range credentials {
+		terms := strings.Split(credential, ":")
+		admins[terms[0]] = terms[1]
+	}
+	log.Println("credentials", admins)
 }
 
 // GetEnvWithDefault attemps to retrieve from env. default calculated based on stage if env value empty.

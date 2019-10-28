@@ -8,5 +8,6 @@ CREATE TABLE
         password CHARACTER VARYING(1024) NOT NULL,
         notes CHARACTER VARYING(2048),
         tags CHARACTER VARYING(256),
+        admin_id CHARACTER VARYING(36) NOT NULL,
         CONSTRAINT pk_id PRIMARY KEY (id)
     ); 

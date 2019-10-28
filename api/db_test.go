@@ -180,6 +180,7 @@ func newPassword() model.Password {
 		Password: "password",
 		Notes:    "Lorem ipsum dolor sit amet, has fabulas percipit consequat id",
 		Tags:     []string{"bank", "bank of mars"},
+		AdminID:  "admin",
 	}
 
 	return p

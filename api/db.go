@@ -50,11 +50,11 @@ func CreatePassword(p model.Password) (string, error) {
 	p.ID = getUUID()
 
 	statement := `
-		INSERT INTO passwords (id, title, url, username, password, notes, tags)
-		VALUES ($1, $2, $3, $4, $5, $6, $7)`
+		INSERT INTO passwords (id, title, url, username, password, notes, tags, admin_id)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
 
 	tags := strings.Join(p.Tags, ",")
-	_, err := db.Exec(statement, p.ID, p.Title, p.URL, p.Username, p.Password, p.Notes, tags)
+	_, err := db.Exec(statement, p.ID, p.Title, p.URL, p.Username, p.Password, p.Notes, tags, p.AdminID)
 	if err != nil {
 		return "", err
 	}
@@ -131,7 +131,7 @@ func passwordRowsMapper(rows *sql.Rows) ([]model.Password, error) {
 		p := model.Password{}
 
 		var tagsRaw string
-		rows.Scan(&p.ID, &p.Title, &p.URL, &p.Username, &p.Password, &p.Notes, &tagsRaw)
+		rows.Scan(&p.ID, &p.Title, &p.URL, &p.Username, &p.Password, &p.Notes, &tagsRaw, &p.AdminID)
 		p.Tags = strings.Split(tagsRaw, ",")
 
 		passwords = append(passwords, p)
@@ -142,7 +142,7 @@ func passwordRowMapper(row *sql.Row) (model.Password, error) {
 	p := model.Password{}
 
 	var tagsRaw string
-	err := row.Scan(&p.ID, &p.Title, &p.URL, &p.Username, &p.Password, &p.Notes, &tagsRaw)
+	err := row.Scan(&p.ID, &p.Title, &p.URL, &p.Username, &p.Password, &p.Notes, &tagsRaw, &p.AdminID)
 	if err != nil {
 		return p, err
 	}
