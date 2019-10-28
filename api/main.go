@@ -100,7 +100,7 @@ func main() {
 		Handler:      web.ErrorChecker(r), // Pass our instance of gorilla/mux in.
 	}
 
-	if stage == "production" {
+	if stage == "keepass" {
 		go log.Fatal(http.ListenAndServe(":80", Port80toHTTPSRedirectHandler()))
 	}
 
