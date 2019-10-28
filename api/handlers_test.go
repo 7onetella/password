@@ -139,7 +139,8 @@ func TestListPasswordsRequest(t *testing.T) {
 	spec.When("svc.ListPasswords")
 
 	input := model.ListPasswordsInput{
-		Title: expected.Title,
+		Title:   expected.Title,
+		AdminID: expected.AdminID,
 	}
 
 	response, err := svc.ListPasswords(input)

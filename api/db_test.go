@@ -141,7 +141,7 @@ func TestListAllPasswords(t *testing.T) {
 
 	spec.When("ListAllPasswords('', 10)")
 
-	passwords, err := ListAllPasswords("", 10)
+	passwords, err := ListAllPasswords("", 10, "admin")
 
 	spec.Then()
 
@@ -162,7 +162,7 @@ func TestFindPasswordsByTitle(t *testing.T) {
 
 	spec.When("FindPasswordsByUsername(p)")
 
-	passwords, err := FindPasswordsByTitle("", "%zulu%", "", 10)
+	passwords, err := FindPasswordsByTitle("", "%zulu%", "", 10, "admin")
 
 	spec.Then()
 

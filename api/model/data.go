@@ -66,6 +66,7 @@ type ListPasswordsInput struct {
 	Notes    string
 	Tags     []string
 	Username string
+	AdminID  string
 }
 
 // PasswordOutput password output json

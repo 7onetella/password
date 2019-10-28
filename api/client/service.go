@@ -128,7 +128,7 @@ func (ps *PasswordService) DeletePassword(ID string) error {
 // ListPasswords finds passwords by title
 func (ps *PasswordService) ListPasswords(input model.ListPasswordsInput) (*model.ListPasswordsOutput, error) {
 
-	o, err := CallEndpoint(ps.GetEndpoint()+"?title="+input.Title, "GET", ps.Authorization, ps.InsecureSkipVerify, nil, &model.ListPasswordsOutput{})
+	o, err := CallEndpoint(ps.GetEndpoint()+"?title="+input.Title+"&admin_id="+input.AdminID, "GET", ps.Authorization, ps.InsecureSkipVerify, nil, &model.ListPasswordsOutput{})
 	if err != nil {
 		return nil, err
 	}

@@ -95,15 +95,15 @@ func DeletePassword(id string) error {
 }
 
 // FindPasswordsByTitle will find password records by username
-func FindPasswordsByTitle(rid, title, nextToken string, size int) ([]model.Password, error) {
+func FindPasswordsByTitle(rid, title, nextToken string, size int, adminID string) ([]model.Password, error) {
 	ds := NewDataSource()
-	return ds.Query(`SELECT * FROM passwords WHERE title like $1 AND id > $2 ORDER BY id ASC LIMIT $3`, title, nextToken, size)
+	return ds.Query(`SELECT * FROM passwords WHERE title like $1 AND id > $2 AND admin_id = $4 ORDER BY id ASC LIMIT $3`, title, nextToken, size, adminID)
 }
 
 // ListAllPasswords lists all passwords with pagination
-func ListAllPasswords(nextToken string, size int) ([]model.Password, error) {
+func ListAllPasswords(nextToken string, size int, adminID string) ([]model.Password, error) {
 	ds := NewDataSource()
-	return ds.Query("SELECT * FROM passwords WHERE id > $1 ORDER BY id ASC LIMIT $2", nextToken, size)
+	return ds.Query("SELECT * FROM passwords WHERE id > $1 AND admin_id = $3 ORDER BY id ASC LIMIT $2", nextToken, size, adminID)
 }
 
 // DeleteAllPasswords deletes all passwords

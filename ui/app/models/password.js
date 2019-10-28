@@ -7,5 +7,6 @@ export default Model.extend({
   username: DS.attr('string'),
   password: DS.attr('string'),
   notes: DS.attr('string'),
-  tags: DS.attr('array')
+  tags: DS.attr('array'),
+  admin_id: DS.attr('string')
 });

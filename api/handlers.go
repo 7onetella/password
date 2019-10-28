@@ -105,6 +105,7 @@ func ListPasswordsRequestHandler(w http.ResponseWriter, req *http.Request) {
 	token := req.FormValue("token")
 	ptoken := req.FormValue("ptoken")
 	size, _ := strconv.Atoi(req.FormValue("size"))
+	adminID := req.FormValue("admin_id")
 	if size == 0 {
 		size = 20
 	}
@@ -118,7 +119,7 @@ func ListPasswordsRequestHandler(w http.ResponseWriter, req *http.Request) {
 	log.Println("token:", token)
 
 	// try retieving the records
-	passwords, err := FindPasswordsByTitle(uuid, title, token, size)
+	passwords, err := FindPasswordsByTitle(uuid, title, token, size, adminID)
 	if err != nil {
 		errorMessageHandler("error while finding records", 500, w)
 		return
