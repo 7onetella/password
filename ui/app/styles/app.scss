@@ -51,8 +51,10 @@ td.clickable {
 	-moz-border-radius: 0px 0px 0 0;
 	-webkit-border-radius: 0px 0px 0 0;
 	font-size: 16px;
-    // margin-bottom: 0px;
     margin: auto;
-	padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 	position: absolute;
 }
