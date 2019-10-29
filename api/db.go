@@ -97,7 +97,7 @@ func DeletePassword(id, adminID string) error {
 // FindPasswordsByTitle will find password records by username
 func FindPasswordsByTitle(rid, title, nextToken string, size int, adminID string) ([]model.Password, error) {
 	ds := NewDataSource()
-	return ds.Query(`SELECT * FROM passwords WHERE title like $1 AND id > $2 AND admin_id = $4 ORDER BY id ASC LIMIT $3`, title, nextToken, size, adminID)
+	return ds.Query(`SELECT * FROM passwords WHERE LOWER(title) like $1 AND id > $2 AND admin_id = $4 ORDER BY id ASC LIMIT $3`, strings.ToLower(title), nextToken, size, adminID)
 }
 
 // ListAllPasswords lists all passwords with pagination
