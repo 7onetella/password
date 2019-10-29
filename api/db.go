@@ -46,7 +46,7 @@ func OpenDB(path string) {
 }
 
 // CreatePassword creates password record in db
-func CreatePassword(p model.Password) (string, error) {
+func CreatePassword(p model.Password, adminID string) (string, error) {
 	p.ID = getUUID()
 
 	statement := `
@@ -54,7 +54,7 @@ func CreatePassword(p model.Password) (string, error) {
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
 
 	tags := strings.Join(p.Tags, ",")
-	_, err := db.Exec(statement, p.ID, p.Title, p.URL, p.Username, p.Password, p.Notes, tags, p.AdminID)
+	_, err := db.Exec(statement, p.ID, p.Title, p.URL, p.Username, p.Password, p.Notes, tags, adminID)
 	if err != nil {
 		return "", err
 	}
@@ -63,18 +63,18 @@ func CreatePassword(p model.Password) (string, error) {
 }
 
 // ReadPassword reads password record from db
-func ReadPassword(ID string) (model.Password, error) {
-	row := db.QueryRow("SELECT * FROM passwords WHERE id = $1", ID)
+func ReadPassword(ID, adminID string) (model.Password, error) {
+	row := db.QueryRow("SELECT * FROM passwords WHERE id = $1 AND admin_id = $2", ID, adminID)
 
 	return passwordRowMapper(row)
 }
 
 // UpdatePassword updates password record in db
-func UpdatePassword(p model.Password) error {
+func UpdatePassword(p model.Password, adminID string) error {
 	statement := `
-		UPDATE passwords SET title=$1, url=$2, username=$3, password=$4, notes=$5, tags=$6 WHERE id=$7`
+		UPDATE passwords SET title=$1, url=$2, username=$3, password=$4, notes=$5, tags=$6 WHERE id=$7 AND admin_id=$8`
 	tags := strings.Join(p.Tags, ",")
-	_, err := db.Exec(statement, p.Title, p.URL, p.Username, p.Password, p.Notes, tags, p.ID)
+	_, err := db.Exec(statement, p.Title, p.URL, p.Username, p.Password, p.Notes, tags, p.ID, adminID)
 	if err != nil {
 		return err
 	}
@@ -83,10 +83,10 @@ func UpdatePassword(p model.Password) error {
 }
 
 // DeletePassword deletes password record in db
-func DeletePassword(id string) error {
+func DeletePassword(id, adminID string) error {
 	statement := `
-		DELETE FROM passwords WHERE ID=$1`
-	_, err := db.Exec(statement, id)
+		DELETE FROM passwords WHERE id=$1 AND admin_id = $2`
+	_, err := db.Exec(statement, id, adminID)
 	if err != nil {
 		return err
 	}

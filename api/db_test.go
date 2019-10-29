@@ -22,7 +22,7 @@ func TestCreatePassword(t *testing.T) {
 
 	spec.When("CreatePassword(p)")
 
-	id, err := CreatePassword(p)
+	id, err := CreatePassword(p, "admin")
 
 	spec.Then()
 
@@ -41,7 +41,7 @@ func TestReadPassword(t *testing.T) {
 
 	spec.When("ReadPassword()")
 
-	a, err := ReadPassword(ID)
+	a, err := ReadPassword(ID, "admin")
 
 	spec.Then()
 
@@ -68,7 +68,7 @@ func TestUpdatePassword(t *testing.T) {
 	spec := GSpec{t}
 
 	e := newPassword()
-	ID, _ := CreatePassword(e)
+	ID, _ := CreatePassword(e, "admin")
 
 	e.ID = ID
 	e.Title = "new title"
@@ -83,13 +83,13 @@ func TestUpdatePassword(t *testing.T) {
 
 	spec.When("UpdatePassword(e)")
 
-	err := UpdatePassword(e)
+	err := UpdatePassword(e, "admin")
 
 	spec.Then()
 
 	spec.AssertAndFailNow(err == nil, "result should not return err", err)
 
-	a, err := ReadPassword(ID)
+	a, err := ReadPassword(ID, "admin")
 
 	spec.AssertAndFailNow(ID == a.ID, "ID should be "+ID, a.ID)
 
@@ -112,19 +112,19 @@ func TestDeletePassword(t *testing.T) {
 	spec := GSpec{t}
 
 	p := newPassword()
-	ID, _ := CreatePassword(p)
+	ID, _ := CreatePassword(p, "admin")
 
 	spec.Given(prettyJSON(p))
 
 	spec.When("DeletePassword(p)")
 
-	err := DeletePassword(ID)
+	err := DeletePassword(ID, "admin")
 
 	spec.Then()
 
 	spec.AssertAndFailNow(err == nil, "result should not return err", err)
 
-	_, err = ReadPassword(ID)
+	_, err = ReadPassword(ID, "admin")
 
 	spec.AssertAndFailNow(err != nil, "read should return error after delete", err)
 
@@ -156,7 +156,7 @@ func TestFindPasswordsByTitle(t *testing.T) {
 
 	p := newPassword()
 	p.Title = "foo zulu bar"
-	_, err := CreatePassword(p)
+	_, err := CreatePassword(p, "admin")
 
 	spec.Given(prettyJSON(p), "rid = ''", "nextToken = ''", "size = 10")
 

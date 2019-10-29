@@ -20,6 +20,12 @@ func TestCreatePasswordRequest(t *testing.T) {
 		t.Errorf("creating serivce failed: %v", err)
 	}
 
+	err = svc.Signin(model.Credentials{Username: "admin", Password: "password"})
+	if err != nil {
+		t.Errorf("authenticating failed: %v", err)
+		return
+	}
+
 	spec.When("svc.CreatePassword")
 
 	response, err := svc.CreatePassword(model.PasswordInput{Data: p})
@@ -38,6 +44,12 @@ func TestReadPasswordRequest(t *testing.T) {
 	svc, err := client.NewPasswordService()
 	if err != nil {
 		t.Errorf("creating serivce failed: %v", err)
+	}
+
+	err = svc.Signin(model.Credentials{Username: "admin", Password: "password"})
+	if err != nil {
+		t.Errorf("authenticating failed: %v", err)
+		return
 	}
 
 	expected := newPassword()
@@ -74,6 +86,12 @@ func TestUpdatePasswordRequest(t *testing.T) {
 		t.Errorf("creating serivce failed: %v", err)
 	}
 
+	err = svc.Signin(model.Credentials{Username: "admin", Password: "password"})
+	if err != nil {
+		t.Errorf("authenticating failed: %v", err)
+		return
+	}
+
 	p := newPassword()
 	input := model.PasswordInput{Data: p}
 	output, err := svc.CreatePassword(input)
@@ -97,6 +115,12 @@ func TestDeletePasswordRequest(t *testing.T) {
 	svc, err := client.NewPasswordService()
 	if err != nil {
 		t.Errorf("creating serivce failed: %v", err)
+	}
+
+	err = svc.Signin(model.Credentials{Username: "admin", Password: "password"})
+	if err != nil {
+		t.Errorf("authenticating failed: %v", err)
+		return
 	}
 
 	expected := newPassword()

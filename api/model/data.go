@@ -13,7 +13,7 @@ type Password struct {
 	Password string   `json:"password"`
 	Notes    string   `json:"notes"`
 	Tags     []string `json:"tags"`
-	AdminID  string   `json:"admin_id"`
+	AdminID  string   `json:"-"`
 }
 
 // http://choly.ca/post/go-json-marshalling/

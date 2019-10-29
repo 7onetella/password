@@ -68,10 +68,10 @@ func main() {
 
 	r.Methods("OPTIONS").HandlerFunc(PreflightOptionsHandler)
 
-	r.Path("/api/passwords").Methods("POST").HandlerFunc(CreatePasswordRequestHandler)
-	r.Path("/api/passwords/{id}").Methods("GET").HandlerFunc(ReadPasswordRequestHandler)
-	r.Path("/api/passwords/{id}").Methods("PATCH").HandlerFunc(UpdatePasswordRequestHandler)
-	r.Path("/api/passwords/{id}").Methods("DELETE").HandlerFunc(DeletePasswordRequestHandler)
+	r.Path("/api/passwords").Methods("POST").HandlerFunc(AuthRequired(CreatePasswordRequestHandler))
+	r.Path("/api/passwords/{id}").Methods("GET").HandlerFunc(AuthRequired(ReadPasswordRequestHandler))
+	r.Path("/api/passwords/{id}").Methods("PATCH").HandlerFunc(AuthRequired(UpdatePasswordRequestHandler))
+	r.Path("/api/passwords/{id}").Methods("DELETE").HandlerFunc(AuthRequired(DeletePasswordRequestHandler))
 	r.Path("/api/passwords").Methods("GET").HandlerFunc(AuthRequired(ListPasswordsRequestHandler))
 	r.Path("/api/passwords").Queries("filter[title]", "{title}").Queries("token", "{token}").Queries("ptoken", "{ptoken}").HandlerFunc(AuthRequired(ListPasswordsRequestHandler))
 

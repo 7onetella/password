@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -74,8 +75,10 @@ func ReadPasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 
 	log.Println("id:", ID)
 
+	adminID := (req.Context().Value(AdminIDContextKey)).(string)
+
 	// try retieving the records
-	password, err := ReadPassword(ID)
+	password, err := ReadPassword(ID, adminID)
 	if err != nil {
 		errorMessageHandler("error while finding record", 500, w)
 		return
@@ -105,7 +108,6 @@ func ListPasswordsRequestHandler(w http.ResponseWriter, req *http.Request) {
 	token := req.FormValue("token")
 	ptoken := req.FormValue("ptoken")
 	size, _ := strconv.Atoi(req.FormValue("size"))
-	adminID := req.FormValue("admin_id")
 	if size == 0 {
 		size = 20
 	}
@@ -117,6 +119,8 @@ func ListPasswordsRequestHandler(w http.ResponseWriter, req *http.Request) {
 	}
 
 	log.Println("token:", token)
+
+	adminID := (req.Context().Value(AdminIDContextKey)).(string)
 
 	// try retieving the records
 	passwords, err := FindPasswordsByTitle(uuid, title, token, size, adminID)
@@ -139,6 +143,9 @@ func ListPasswordsRequestHandler(w http.ResponseWriter, req *http.Request) {
 
 }
 
+// AdminIDContextKey admin id context key
+const AdminIDContextKey = "AdminID"
+
 // AuthRequired requires auth for given handler
 func AuthRequired(next func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
@@ -160,8 +167,9 @@ func AuthRequired(next func(http.ResponseWriter, *http.Request)) func(http.Respo
 
 		log.Println("Authenticated. ID:", ID, ", Expiration:", expiration)
 
+		ctx := context.WithValue(req.Context(), AdminIDContextKey, ID)
 		// allow access
-		next(w, req)
+		next(w, req.WithContext(ctx))
 	}
 }
 
@@ -345,7 +353,8 @@ func UpdatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	err = UpdatePassword(dataPassword.Data)
+	adminID := (req.Context().Value(AdminIDContextKey)).(string)
+	err = UpdatePassword(dataPassword.Data, adminID)
 	WriteServerError(err, "error while persisting to db", w)
 	if err != nil {
 		return
@@ -367,14 +376,15 @@ func DeletePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 
 	log.Println("id:", ID)
 
+	adminID := (req.Context().Value(AdminIDContextKey)).(string)
 	// try retieving the records
-	_, err := ReadPassword(ID)
+	_, err := ReadPassword(ID, adminID)
 	if err != nil {
 		errorMessageHandler("error while finding record", 500, w)
 		return
 	}
 
-	err = DeletePassword(ID)
+	err = DeletePassword(ID, adminID)
 	if err != nil {
 		errorMessageHandler("error while finding record", 500, w)
 		return
@@ -459,6 +469,8 @@ func DecodePasswordRequest(req *http.Request) (model.PasswordInput, error) {
 	vars := mux.Vars(req)
 	ID := vars["id"]
 
+	adminID := (req.Context().Value(AdminIDContextKey)).(string)
+
 	data, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		return dataPassword, err
@@ -466,6 +478,8 @@ func DecodePasswordRequest(req *http.Request) (model.PasswordInput, error) {
 
 	json.Unmarshal(data, &dataPassword)
 	dataPassword.Data.ID = ID
+	// ensuring data sent over matches authenticated user
+	dataPassword.Data.AdminID = adminID
 
 	return dataPassword, nil
 }
