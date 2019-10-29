@@ -35,7 +35,7 @@ func TestReadPassword(t *testing.T) {
 	spec := GSpec{t}
 
 	e := newPassword()
-	ID, err := CreatePassword(e)
+	ID, err := CreatePassword(e, "admin")
 
 	spec.Given("ID=" + ID)
 

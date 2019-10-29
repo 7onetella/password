@@ -41,7 +41,8 @@ func CreatePasswordRequestHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	ID, err := CreatePassword(passwordRequest.Data)
+	adminID := (req.Context().Value(AdminIDContextKey)).(string)
+	ID, err := CreatePassword(passwordRequest.Data, adminID)
 	if err != nil {
 		errorMessageHandler("error while creating record", 500, w)
 		return
