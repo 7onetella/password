@@ -31,6 +31,7 @@ brews:
     # Github repository to push the tap to.
     github:
       owner: 7onetella
-      name: password 
-
-    url_template: "http://github.mycompany.com/foo/bar/releases/{{ .Tag }}/{{ .ArtifactName }}"
+      name: homebrew-password 
+    folder: Formula
+    homepage: https://github.com/7onetella/password 
+    description: password manager 
