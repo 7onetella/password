@@ -54,6 +54,7 @@ deploy() {
   export NOMAD_ADDR=http://nomad.7onetella.net:4646
   nomad job run ./dev.nomad.${BUILD_ID}
   rm ./dev.nomad.${BUILD_ID}
+  sleep 10
 }
 
 run_test() {
