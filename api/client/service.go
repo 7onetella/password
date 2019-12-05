@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/7onetella/password/api/model"
 )
@@ -46,7 +47,11 @@ type RestfulService interface {
 
 // GetEndpoint returns endpoint base url
 func (ps *PasswordService) GetEndpoint() string {
-	return fmt.Sprintf("https://%s/api/passwords", ps.serverAddr)
+	protocol := "https"
+	if strings.Contains(ps.serverAddr, ":80") {
+		protocol = "http"
+	}
+	return fmt.Sprintf("%s://%s/api/passwords", protocol, ps.serverAddr)
 }
 
 // CallEndpoint calls endpoint
@@ -68,7 +73,12 @@ func CallEndpoint(url, method, authorization string, insecureSkipVerify bool, v 
 
 // Signin authenticates
 func (ps *PasswordService) Signin(input model.Credentials) error {
-	o, err := CallEndpoint("https://"+ps.serverAddr+"/api/signin", "POST", "", ps.InsecureSkipVerify, &input, &model.AuthToken{})
+	protocol := "https"
+	if strings.Contains(ps.serverAddr, ":80") {
+		protocol = "http"
+	}
+
+	o, err := CallEndpoint(protocol+"://"+ps.serverAddr+"/api/signin", "POST", "", ps.InsecureSkipVerify, &input, &model.AuthToken{})
 	if err != nil {
 		return err
 	}
