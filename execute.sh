@@ -51,7 +51,7 @@ deploy() {
 
   echo scheduling deployment
   cat ./dev.nomad | sed 's|BUILD_ID|'"${BUILD_ID}"'|g' > dev.nomad.${BUILD_ID}
-  export NOMAD_ADDR=http://localhost:4646
+  export NOMAD_ADDR=http://nomad.7onetella.net:4646
   nomad job run ./dev.nomad.${BUILD_ID}
   rm ./dev.nomad.${BUILD_ID}
 }
@@ -59,7 +59,7 @@ deploy() {
 run_test() {
   cd api
   echo current location is $(pwd)
-  export DB_CONNSTR="postgres://dev:dev114@localhost/devdb"
+  export DB_CONNSTR="postgres://dev:dev114@tmt-vm18.7onetella.net/devdb"
   export SERVER_ADDR=dev:4242
   export INSECURE=true
   go test -v ./...
