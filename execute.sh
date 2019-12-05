@@ -45,7 +45,7 @@ deploy() {
   echo uploading to file server
   tar czvf api_dev_${BUILD_ID}.tar.gz api_linux_amd64_${BUILD_ID} dev-*.pem
 
-  scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no api_dev_${BUILD_ID}.tar.gz pi@nas.7onetella.net:/mnt/uploads
+  scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no api_dev_${BUILD_ID}.tar.gz vagrant@tmt-vm18.7onetella.net:/mnt/uploads
   rm ./api_linux_amd64_${BUILD_ID}
   rm ./api_dev_${BUILD_ID}.tar.gz
 
@@ -69,7 +69,7 @@ release() {
   cd api
   # upload to file server
   
-  scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./api_linux_arm_${BUILD_ID} pi@nas.7onetella.net:/mnt/uploads
+  scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./api_linux_arm_${BUILD_ID} vagrant@tmt-vm18.7onetella.net:/mnt/uploads
   rm ./api_linux_arm_${BUILD_ID}
 
   export NOMAD_ADDR=http://nomad.7onetella.net:4646
