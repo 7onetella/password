@@ -51,13 +51,13 @@ job "password" {
 
         check {
            type     = "http"
-           protocol = "https"
+           protocol = "http"
            path     = "/api/health"
            interval = "10s"
            timeout  = "2s"
-           tls_skip_verify = true
+          //  tls_skip_verify = true
          }
-         
+
       }
 
       # It is possible to set environment variables which will be
