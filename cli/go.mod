@@ -9,9 +9,8 @@ require (
 	github.com/creack/pty v1.1.9 // indirect
 	github.com/dgryski/go-sip13 v0.0.0-20190329191031-25c5027a8c7b // indirect
 	github.com/fatih/color v1.7.0
+	github.com/mattn/go-runewidth v0.0.7 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.1
 	github.com/prometheus/tsdb v0.10.0 // indirect
 	github.com/rogpeppe/go-internal v1.4.0 // indirect
