@@ -19,13 +19,13 @@ job "password" {
   # A group defines a series of tasks that should be co-located
   # on the same client (host). All tasks within a group will be
   # placed on the same host.
-  group "webs" {
+  group "web" {
     # Specify the number of these tasks we want.
     count = 1
 
     # Create an individual task (unit of work). This particular
     # task utilizes a Docker container to front a web application.
-    task "api" {
+    task "app" {
       artifact {
         source      = "http://tmt-vm18.7onetella.net/uploads/api_dev_BUILD_ID.tar.gz"
       }

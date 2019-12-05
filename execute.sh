@@ -60,7 +60,7 @@ run_test() {
   cd api
   echo current location is $(pwd)
   export DB_CONNSTR="postgres://dev:dev114@tmt-vm18.7onetella.net/devdb"
-  export SERVER_ADDR=dev:4242
+  export SERVER_ADDR=devpass.7onetella.net:80
   export INSECURE=true
   go test -v ./...
 }
