@@ -57,20 +57,15 @@ job "password" {
            timeout  = "2s"
            tls_skip_verify = true
          }
-
-        //check {
-        //  type     = "http"
-        //  path     = "/api/health"
-        //  interval = "10s"
-        //  timeout  = "2s"
-        //}
+         
       }
 
       # It is possible to set environment variables which will be
       # available to the task when it runs.
       env {
         "HTTP_PORT" = "${NOMAD_PORT_http}"
-        "STAGE" = "dev"
+        "STAGE" = "devpass"
+        "DB_CONNSTR" = "postgres://dev:dev114@tmt-vm18.7onetella.net/devdb"
       }
 
       template {
@@ -89,10 +84,7 @@ EOH
 
         network {
           mbits = 10
-
-          port "http" {
-            static = "4242" 
-          }
+          port "http" {}
         }
       }
     }

@@ -102,12 +102,17 @@ func main() {
 		Handler:      web.ErrorChecker(r), // Pass our instance of gorilla/mux in.
 	}
 
+	switch stage {
+	case "devpass":
+		log.Fatal(srv.ListenAndServe())
+	default:
+		log.Fatal(srv.ListenAndServeTLS(GetCertAndKey()))
+	}
+
 	//if stage == "keepass" {
 	//		log.Println("starting http  server on port 80")
 	//		go log.Fatal(http.ListenAndServe("0.0.0.0:80", Port80toHTTPSRedirectHandler()))
-	//	}
-
-	log.Fatal(srv.ListenAndServeTLS(GetCertAndKey()))
+	//}
 }
 
 // GetCertAndKey return cert and key locations
