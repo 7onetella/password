@@ -28,7 +28,7 @@ var Version string
 
 func init() {
 
-	stage = GetEnvWithDefault("STAGE", "localpass")
+	stage = GetEnvWithDefault("STAGE", "localhost")
 
 	port = GetEnvWithDefault("HTTP_PORT", "4242")
 

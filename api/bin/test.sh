@@ -25,6 +25,4 @@ SERVER_ADDR="${SERVER_HOST}:${SERVER_PORT}"
 export SERVER_ADDR
 export INSECURE=true
 
-dig @127.0.0.1 -p 8600 password-dev-app.service.dc1.consul. SRV
-
 go test -v ./...

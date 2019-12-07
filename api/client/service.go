@@ -10,7 +10,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/7onetella/password/api/model"
 )
@@ -20,6 +19,7 @@ type PasswordService struct {
 	serverAddr         string
 	Authorization      string
 	InsecureSkipVerify bool
+	stage string
 }
 
 // NewPasswordService returns new instance of password service
@@ -31,6 +31,12 @@ func NewPasswordService() (*PasswordService, error) {
 		return nil, errors.New("SERVER_ADDR environment variable not set")
 	}
 	ps.serverAddr = serverAddr
+
+	stage, exists := os.LookupEnv("STAGE")
+	if !exists {
+		return nil, errors.New("STAGE environment variable not set")
+	}	
+	ps.stage = stage
 
 	insecure := os.Getenv("INSECURE")
 	if insecure == "true" {
@@ -48,7 +54,7 @@ type RestfulService interface {
 // GetEndpoint returns endpoint base url
 func (ps *PasswordService) GetEndpoint() string {
 	protocol := "https"
-	if strings.Contains(ps.serverAddr, ":80") {
+	if ps.stage == "dev" {
 		protocol = "http"
 	}
 	return fmt.Sprintf("%s://%s/api/passwords", protocol, ps.serverAddr)
@@ -74,7 +80,7 @@ func CallEndpoint(url, method, authorization string, insecureSkipVerify bool, v 
 // Signin authenticates
 func (ps *PasswordService) Signin(input model.Credentials) error {
 	protocol := "https"
-	if strings.Contains(ps.serverAddr, ":80") {
+	if ps.stage == "dev" {
 		protocol = "http"
 	}
 
