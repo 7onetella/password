@@ -21,8 +21,6 @@
 package cmd
 
 import (
-	"strings"
-
 	"github.com/7onetella/password/api/client"
 	"github.com/7onetella/password/api/model"
 	"github.com/spf13/cobra"
@@ -39,8 +37,8 @@ var readCmd = &cobra.Command{
 		svc, err := client.NewPasswordService()
 		ExitOnError(err, "initializing client")
 
-		username, password := credentials()
-		err = svc.Signin(model.Credentials{Username: username, Password: password})
+		username, pwd := credentials()
+		err = svc.Signin(model.Credentials{Username: username, Password: pwd})
 		ExitOnError(err, "authenticating")
 
 		ID := args[0]
@@ -48,15 +46,15 @@ var readCmd = &cobra.Command{
 		output, err := svc.ReadPassword(ID)
 		ExitOnError(err, "reading password")
 
-		Success("reading password")
-
 		password := output.Data
-		Println(password.URL)
-		Println(password.Title)
-		Println(password.Username)
-		Println(password.Password)
-		Println(password.Notes)
-		Println(strings.Join(password.Tags, ","))
+
+		Newline()
+		PrintIndent("Title    : " + password.Title)
+		PrintIndent("URL      : " + password.URL)
+		PrintIndent("Username : " + password.Username)
+		PrintIndent("Password : " + password.Password)
+		PrintIndent("Notes    : " + password.Notes)
+
 	},
 }
 

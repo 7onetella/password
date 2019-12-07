@@ -293,6 +293,16 @@ func Log(msg string) {
 	}
 }
 
+// PrintIndent prints message
+func PrintIndent(msg string) {
+	if len(msg) > 0 {
+		lines := strings.Split(msg, "\n")
+		for _, line := range lines {
+			fmt.Print(indentation + line + "\n")
+		}
+	}
+}
+
 // Newline prints new line
 func Newline() {
 	fmt.Println()

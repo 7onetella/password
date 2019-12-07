@@ -22,7 +22,6 @@ package cmd
 
 import (
 	"os"
-	"strings"
 
 	"github.com/olekukonko/tablewriter"
 
@@ -42,8 +41,8 @@ var listCmd = &cobra.Command{
 		svc, err := client.NewPasswordService()
 		ExitOnError(err, "initializing client")
 
-		username, password := credentials()
-		err = svc.Signin(model.Credentials{Username: username, Password: password})
+		username, pwd := credentials()
+		err = svc.Signin(model.Credentials{Username: username, Password: pwd})
 		ExitOnError(err, "authenticating")
 
 		input := model.ListPasswordsInput{}
@@ -55,10 +54,10 @@ var listCmd = &cobra.Command{
 		ExitOnError(err, "listing password")
 
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"Title", "Username", "Notes", "Tags"})
+		table.SetHeader([]string{"ID", "Title", "Username"})
 
 		for _, p := range response.Items {
-			table.Append([]string{p.Title, p.Username, p.Notes, strings.Join(p.Tags, ",")})
+			table.Append([]string{p.ID, p.Title, p.Username})
 		}
 		Newline()
 		table.Render()

@@ -21,6 +21,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/7onetella/password/api/client"
 	"github.com/7onetella/password/api/model"
 	"github.com/spf13/cobra"
@@ -29,7 +31,6 @@ import (
 var createCmdTitle string
 var createCmdURL string
 var createCmdNotes string
-var createCmdTags []string
 
 var createCmd = &cobra.Command{
 	Use:     "create <username> <password>",
@@ -42,8 +43,8 @@ var createCmd = &cobra.Command{
 		svc, err := client.NewPasswordService()
 		ExitOnError(err, "initializing client")
 
-		username, password := credentials()
-		err = svc.Signin(model.Credentials{Username: username, Password: password})
+		username, pwd := credentials()
+		err = svc.Signin(model.Credentials{Username: username, Password: pwd})
 		ExitOnError(err, "authenticating")
 
 		p := model.Password{}
@@ -52,13 +53,13 @@ var createCmd = &cobra.Command{
 		p.Username = args[0]
 		p.Password = args[1]
 		p.Notes = createCmdNotes
-		p.Tags = createCmdTags
 
 		output, err := svc.CreatePassword(model.PasswordInput{Data: p})
 		ExitOnError(err, "creating password")
 
 		Success("creating password")
-		Info("ID: " + output.Data.ID)
+
+		fmt.Println("ID: " + output.Data.ID)
 
 	},
 }
@@ -72,6 +73,5 @@ func init() {
 	flags.StringVar(&createCmdTitle, "title", "", "required: title")
 	flags.StringVarP(&createCmdURL, "url", "u", "", "required: url")
 	flags.StringVarP(&createCmdNotes, "notes", "n", "", "required: notes")
-	flags.StringArrayVarP(&createCmdTags, "tags", "t", []string{}, "optional: tags")
 
 }
