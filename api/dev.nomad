@@ -19,7 +19,7 @@ job "password" {
   # A group defines a series of tasks that should be co-located
   # on the same client (host). All tasks within a group will be
   # placed on the same host.
-  group "web" {
+  group "dev" {
     # Specify the number of these tasks we want.
     count = 1
 
@@ -42,7 +42,7 @@ job "password" {
       # The service block tells Nomad how to register this service
       # with Consul for service discovery and monitoring.
       service {
-        tags = ["urlprefix-devpass.7onetella.net/"]
+        tags = ["urlprefix-password-dev-app.7onetella.net/"]
         
         # This tells Consul to monitor the service on the port
         # labelled "http". Since Nomad allocates high dynamic port
@@ -65,12 +65,14 @@ job "password" {
       env {
         "HTTP_PORT" = "${NOMAD_PORT_http}"
         "STAGE" = "devpass"
-        "DB_CONNSTR" = "postgres://dev:dev114@tmt-vm18.7onetella.net/devdb"
       }
 
       template {
         data = <<EOH
 BUILD_NUMBER="${BUILD_NUMBER}"
+DB_CONNSTR="{{key "password-dev-app/DB_CONNSTR"}}"
+CRYPTO_TOKEN="{{key "password-dev-app/CRYPTO_TOKEN"}}"
+CREDENTIAL="{{key "password-dev-app/CREDENTIAL"}}"
 EOH
         destination = "secrets/file.env"
         env         = true

@@ -27,23 +27,24 @@ var URLBase string
 var Version string
 
 func init() {
-	stage = GetEnvWithDefault("STAGE", "localhost")
+
+	stage = GetEnvWithDefault("STAGE", "localpass")
 
 	port = GetEnvWithDefault("HTTP_PORT", "4242")
 
 	URLBase = fmt.Sprintf("http://%s:%s/api", stage, port)
 
-	connStr := GetEnvWithDefault("DB_CONNSTR", "postgres://dev:dev114@localhost/devdb")
+	connStr := GetEnvWithDefault("DB_CONNSTR", "")
 	dbinst, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic("error while opening db connection")
 	}
 	db = dbinst
 
-	cryptoToken := GetEnvWithDefault("CRYPTO_TOKEN", "crypto_token_12345")
+	cryptoToken := GetEnvWithDefault("CRYPTO_TOKEN", "")
 	hmacSecret = []byte(cryptoToken)
 
-	v := GetEnvWithDefault("CREDENTIAL", "admin:password")
+	v := GetEnvWithDefault("CREDENTIAL", "")
 	credentials := strings.Split(v, ";")
 	for _, credential := range credentials {
 		terms := strings.Split(credential, ":")

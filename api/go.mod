@@ -25,6 +25,7 @@ require (
 	github.com/google/uuid v1.1.1
 	github.com/gopherjs/gopherjs v0.0.0-20190915194858-d3ddacdb130f // indirect
 	github.com/gorilla/mux v1.7.3
+	github.com/hashicorp/consul/api v1.3.0
 	github.com/jmhodges/levigo v1.0.0 // indirect
 	github.com/lib/pq v1.2.0
 	github.com/markbates/refresh v1.8.0
