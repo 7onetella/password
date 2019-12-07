@@ -23,14 +23,17 @@ package cmd
 // SOFTWARE.
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"strings"
+	"syscall"
 
 	"github.com/fatih/color"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 var cfgFile string
@@ -374,4 +377,25 @@ func ConvertKeyValuePairArgSliceToMap(keyvals []string) map[string]string {
 	}
 
 	return data
+}
+
+// https://stackoverflow.com/a/32768479
+func credentials() (string, string) {
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Println()
+	fmt.Print("  Username: ")
+	username, _ := reader.ReadString('\n')
+
+	fmt.Print("  Password: ")
+	bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
+	if err != nil {
+		ExitOnError(err, "entering password")
+	}
+	password := string(bytePassword)
+	
+	fmt.Print("*********")
+	fmt.Println()
+
+	return strings.TrimSpace(username), strings.TrimSpace(password)
 }

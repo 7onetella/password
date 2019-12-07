@@ -43,6 +43,10 @@ var updateCmd = &cobra.Command{
 		svc, err := client.NewPasswordService()
 		ExitOnError(err, "initializing client")
 
+		username, password := credentials()
+		err = svc.Signin(model.Credentials{Username: username, Password: password})
+		ExitOnError(err, "authenticating")
+
 		ID := args[0]
 
 		output, err := svc.ReadPassword(ID)

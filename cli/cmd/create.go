@@ -42,6 +42,10 @@ var createCmd = &cobra.Command{
 		svc, err := client.NewPasswordService()
 		ExitOnError(err, "initializing client")
 
+		username, password := credentials()
+		err = svc.Signin(model.Credentials{Username: username, Password: password})
+		ExitOnError(err, "authenticating")
+
 		p := model.Password{}
 		p.Title = createCmdTitle
 		p.URL = createCmdURL

@@ -36,21 +36,23 @@ var listCmd = &cobra.Command{
 	Short:   "Lists passwords",
 	Long:    ``,
 	Example: ``,
-	Args:    cobra.MinimumNArgs(1),
+	Args:    cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 
 		svc, err := client.NewPasswordService()
 		ExitOnError(err, "initializing client")
 
-		err = svc.Signin(model.Credentials{Username: "admin", Password: "password"})
-		ExitOnError(err, "initializing client")
+		username, password := credentials()
+		err = svc.Signin(model.Credentials{Username: username, Password: password})
+		ExitOnError(err, "authenticating")
 
 		input := model.ListPasswordsInput{}
-		input.Title = args[0]
+		input.Title = "%%" // %% will list everything
+		if len(args) > 0 {
+			input.Title = args[0]
+		}
 		response, err := svc.ListPasswords(input)
 		ExitOnError(err, "listing password")
-
-		Success("listing password")
 
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetHeader([]string{"Title", "Username", "Notes", "Tags"})
@@ -58,6 +60,7 @@ var listCmd = &cobra.Command{
 		for _, p := range response.Items {
 			table.Append([]string{p.Title, p.Username, p.Notes, strings.Join(p.Tags, ",")})
 		}
+		Newline()
 		table.Render()
 	},
 }
