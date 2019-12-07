@@ -19,7 +19,7 @@ type PasswordService struct {
 	serverAddr         string
 	Authorization      string
 	InsecureSkipVerify bool
-	stage string
+	stage              string
 }
 
 // NewPasswordService returns new instance of password service
@@ -32,11 +32,7 @@ func NewPasswordService() (*PasswordService, error) {
 	}
 	ps.serverAddr = serverAddr
 
-	stage, exists := os.LookupEnv("STAGE")
-	if !exists {
-		return nil, errors.New("STAGE environment variable not set")
-	}	
-	ps.stage = stage
+	ps.stage = os.Getenv("STAGE")
 
 	insecure := os.Getenv("INSECURE")
 	if insecure == "true" {
