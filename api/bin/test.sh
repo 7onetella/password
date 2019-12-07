@@ -13,7 +13,15 @@ fi
 
 . bin/env.sh
 
-export SERVER_ADDR=password-${STAGE}-app.7onetella.net:4242
+SERVER_HOST=$(dig @127.0.0.1 -p 8600 password-dev-app.service.dc1.consul. SRV | grep "IN A" | awk '{ print $5 }')
+SERVER_PORT=$(dig @127.0.0.1 -p 8600 password-dev-app.service.dc1.consul. SRV | grep "IN SRV" | awk '{ print $7 }')
+
+if [ "${STAGE}" = "localhost" ]; then
+   SERVER_PORT=4242
+fi
+
+SERVER_ADDR="${SERVER_HOST}:${SERVER_PORT}"
+export SERVER_ADDR
 export INSECURE=true
 
 go test -v ./...
