@@ -60,12 +60,8 @@ deploy() {
 run_test() {
   cd api
   echo current location is $(pwd)
-  DB_CONNSTR=$(consul kv get password-dev-app/DB_CONNSTR)
-  export DB_CONNSTR
-
-  export SERVER_ADDR=password-dev-app.7onetella.net:80
-  export INSECURE=true
-  go test -v ./...
+  
+  bin/test.sh dev
 }
 
 release() {
