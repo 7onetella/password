@@ -21,8 +21,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/7onetella/password/api/client"
 	"github.com/7onetella/password/api/model"
 	"github.com/spf13/cobra"
@@ -59,7 +57,8 @@ var createCmd = &cobra.Command{
 
 		Success("creating password")
 
-		fmt.Println("ID: " + output.Data.ID)
+		Newline()
+		PrintIndent("ID: " + output.Data.ID)
 
 	},
 }
