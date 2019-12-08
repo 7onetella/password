@@ -20,6 +20,8 @@ type PasswordService struct {
 	Authorization      string
 	InsecureSkipVerify bool
 	stage              string
+	Token              string
+	Expiration         int64
 }
 
 // NewPasswordService returns new instance of password service
@@ -87,9 +89,37 @@ func (ps *PasswordService) Signin(input model.Credentials) error {
 
 	authToken := o.(*model.AuthToken)
 	ps.Authorization = "Bearer " + authToken.Token
+	ps.Token = authToken.Token
+	ps.Expiration = authToken.Expiration
 
 	return nil
 }
+
+// RefreshToken refreshes auth token
+func (ps *PasswordService) RefreshToken() error {
+	protocol := "https"
+	if ps.stage == "dev" {
+		protocol = "http"
+	}
+
+	input := model.RefreshToken{
+		Token: ps.Token,
+		Expiration: ps.Expiration,
+	}
+
+	o, err := CallEndpoint(protocol+"://"+ps.serverAddr+"/api/token-refresh", "POST", "", ps.InsecureSkipVerify, &input, &model.RefreshToken{})
+	if err != nil {
+		return err
+	}
+
+	refreshToken := o.(*model.RefreshToken)
+	ps.Authorization = "Bearer " + refreshToken.Token
+	ps.Token = refreshToken.Token
+	ps.Expiration = refreshToken.Expiration
+
+	return nil
+}
+
 
 // CreatePassword creates password
 func (ps *PasswordService) CreatePassword(input model.PasswordInput) (*model.PasswordOutput, error) {

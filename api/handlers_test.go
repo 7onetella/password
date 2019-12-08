@@ -2,6 +2,7 @@ package main
 
 import (
 	"testing"
+	"time"
 
 	"github.com/7onetella/password/api/client"
 	"github.com/7onetella/password/api/model"
@@ -182,5 +183,41 @@ func TestListPasswordsRequest(t *testing.T) {
 	spec.AssertAndFailNow(item.Notes == expected.Notes, "notes should be "+expected.Notes, item.Notes)
 	spec.AssertAndFailNow(item.Tags[0] == expected.Tags[0], "first tag should be "+expected.Tags[0], item.Tags[0])
 	spec.AssertAndFailNow(item.Tags[1] == expected.Tags[1], "second tag should be "+expected.Tags[1], item.Tags[1])
+
+}
+
+func TestRefreshToken(t *testing.T) {
+
+	spec := GSpec{t}
+
+	svc, err := client.NewPasswordService()
+	if err != nil {
+		t.Errorf("creating serivce failed: %v", err)
+	}
+
+	err = svc.Signin(model.Credentials{Username: "admin", Password: "password"})
+	if err != nil {
+		t.Errorf("authenticating failed: %v", err)
+		return
+	}
+
+	authToken := svc.Token
+
+	spec.Given("Auth Token=" + svc.Token)
+
+	spec.When("svc.RefreshToken()")
+
+	time.Sleep(5 * time.Second)
+
+	err = svc.RefreshToken()
+
+	spec.Then()
+
+	refreshToken := svc.Token
+
+	spec.AssertAndFailNow(err == nil, "result should not return error", err)
+	spec.AssertAndFailNow(len(authToken) > 0, "length of auth token is not 0", len(authToken))
+	spec.AssertAndFailNow(len(refreshToken) > 0, "length of refresh token is not 0", len(refreshToken))
+	spec.AssertAndFailNow(authToken != refreshToken, "authToken != refreshToken", "authToken == refreshToken")
 
 }
