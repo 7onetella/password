@@ -29,7 +29,6 @@ import (
 var updateCmdTitle string
 var updateCmdURL string
 var updateCmdNotes string
-var updateCmdTags []string
 var updateCmdPassword string
 
 var updateCmd = &cobra.Command{
@@ -76,10 +75,6 @@ var updateCmd = &cobra.Command{
 			record.Notes = updateCmdNotes
 		}
 
-		if len(updateCmdTags) > 0 {
-			record.Tags = updateCmdTags
-		}
-
 		if dirty {
 			err = svc.UpdatePassword(model.PasswordInput{Data: record})
 			ExitOnError(err, "updating password")
@@ -99,6 +94,5 @@ func init() {
 	flags.StringVarP(&updateCmdPassword, "password", "p", "", "optional: password")
 	flags.StringVarP(&updateCmdURL, "url", "u", "", "optional: url")
 	flags.StringVarP(&updateCmdNotes, "notes", "n", "", "optional: notes")
-	flags.StringArrayVarP(&updateCmdTags, "tags", "t", []string{}, "optional: tags")
 
 }
