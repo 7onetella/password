@@ -24,11 +24,17 @@ package cmd
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"strconv"
 	"strings"
 	"syscall"
+	"time"
 
+	"github.com/7onetella/password/api/client"
+	"github.com/7onetella/password/api/model"
 	"github.com/fatih/color"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -403,9 +409,119 @@ func credentials() (string, string) {
 		ExitOnError(err, "entering password")
 	}
 	password := string(bytePassword)
-	
+
 	fmt.Print("*********")
 	fmt.Println()
 
 	return strings.TrimSpace(username), strings.TrimSpace(password)
+}
+
+// ReadAuthToken reads auth token
+func ReadAuthToken() (*model.AuthToken, error) {
+	home, err := homedir.Dir()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	o := &model.AuthToken{}
+	data, err := ioutil.ReadFile(home + "/.keepass.json")
+	err = json.Unmarshal(data, o)
+	if err != nil {
+		return nil, err
+	}
+
+	return o, nil
+}
+
+// WriteAuthToken reads auth token
+func WriteAuthToken(authToken *model.AuthToken) error {
+	home, err := homedir.Dir()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	data, err := json.Marshal(authToken)
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(home+"/.keepass.json", data, 0755)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// GetAuthenticatedService ensures returned service client is authenticated
+func GetAuthenticatedService() (*client.PasswordService, error) {
+	svc, err := client.NewPasswordService()
+	ExitOnError(err, "instantiating client")
+	var username, pwd string
+	var expired bool
+
+	// read .keepass.json for session token
+	authToken, err := ReadAuthToken()
+	if err != nil {
+		// file may not exist, go to prompt for auth
+		goto prompt_for_auth
+	}
+	expired = time.Now().Unix() > authToken.Expiration
+	if authToken != nil {
+		now := time.Now().Unix()
+		expiration := authToken.Expiration
+
+		if !expired {
+			remaining := expiration - now
+			Debug("time left: " + strconv.Itoa(int(remaining)))
+
+			// if less than 30 seconds is left then refresh token
+			if remaining < 110 {
+				Debug("refreshing token")
+				svc.Token = authToken.Token
+				err = svc.RefreshToken()
+				if err != nil {
+					Debug("error while refreshing token")
+					goto prompt_for_auth
+				}
+				Debug("token refreshed")
+				goto write_token
+			}
+		} else {
+			// if expired then prompt for auth
+			timeElapsed := now - authToken.Expiration
+			Debug("time elapsed:" + strconv.Itoa(int(timeElapsed)))
+			goto prompt_for_auth
+		}
+	}
+
+	// check expiration
+	// if expired, then prompt for authentication and signin to populate Authentication
+	if expired {
+		Debug("token exipred")
+		goto prompt_for_auth
+	}
+
+	// if not expired, then populate service Authentication
+	svc.Authorization = "Bearer " + authToken.Token
+	return svc, nil
+
+prompt_for_auth:
+	username, pwd = credentials()
+	err = svc.Signin(model.Credentials{Username: username, Password: pwd})
+	ExitOnError(err, "authenticating")
+
+write_token:
+	input := &model.AuthToken{
+		Token:      svc.Token,
+		Expiration: svc.Expiration,
+	}
+	err = WriteAuthToken(input)
+	if err != nil {
+		return nil, err
+	}
+
+	return svc, nil
 }

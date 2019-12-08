@@ -25,7 +25,6 @@ import (
 
 	"github.com/olekukonko/tablewriter"
 
-	"github.com/7onetella/password/api/client"
 	"github.com/7onetella/password/api/model"
 	"github.com/spf13/cobra"
 )
@@ -38,12 +37,8 @@ var listCmd = &cobra.Command{
 	Args:    cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 
-		svc, err := client.NewPasswordService()
+		svc, err := GetAuthenticatedService()
 		ExitOnError(err, "initializing client")
-
-		username, pwd := credentials()
-		err = svc.Signin(model.Credentials{Username: username, Password: pwd})
-		ExitOnError(err, "authenticating")
 
 		input := model.ListPasswordsInput{}
 		input.Title = "%%" // %% will list everything
