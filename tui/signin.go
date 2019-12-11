@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
 
 	"github.com/7onetella/password/api/client"
@@ -15,12 +16,31 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 )
 
+var infoBar = tview.NewTextView()
 var signinForm = tview.NewForm()
+var isSignedIn = false
 
 func signInPage() (title string, content tview.Primitive) {
+	signInFlexView := tview.NewFlex()
+
+	infoBarReset()
+
 	signinForm.Clear(true)
 	signInPageReset()
-	return "Sign in", signinForm
+
+	rows := tview.NewFlex().SetDirection(tview.FlexRow).
+		AddItem(infoBar, 2, 1, false).
+		AddItem(signinForm, 0, 2, true)
+
+	signInFlexView.AddItem(rows, 0, 1, true)
+	signInFlexView.SetBorder(true)
+
+	return "Sign in", signInFlexView
+}
+
+func infoBarReset() {
+	infoBar.SetText("")
+	infoBar.SetBorderPadding(1, 0, 2, 1)
 }
 
 func signInPageReset() {
@@ -29,7 +49,7 @@ func signInPageReset() {
 		AddPasswordField("Password:", "", 20, '*', nil).
 		AddButton("Sing In", signinAction)
 
-	signinForm.SetBorder(true).SetBorderPadding(1, 1, 2, 1)
+	signinForm.SetBorder(false).SetBorderPadding(1, 1, 2, 1)
 }
 
 func signinAction() {
@@ -45,7 +65,22 @@ func signinAction() {
 		Username: username,
 		Password: password,
 	}
-	svc.Signin(credentials)
+	err = svc.Signin(credentials)
+	if err != nil {
+		isSignedIn = false
+		infoBar.SetText("Authentication Error").SetTextColor(tcell.ColorRed)
+		go func() {
+			time.Sleep(3 * time.Second)
+			infoBarReset()
+			app.Draw()
+		}()
+
+		notify("error while authenticating: " + err.Error())
+		return
+	}
+
+	isSignedIn = true
+
 	WriteAuthToken(svc.Token, svc.Expiration)
 	go RefreshTokenInBackground(svc)
 
@@ -118,6 +153,9 @@ func WriteAuthToken(token string, expiration int64) error {
 func RefreshTokenInBackground(svc *client.PasswordService) {
 	for {
 		time.Sleep(10 * time.Second)
+		if !isSignedIn {
+			break
+		}
 
 		var expired bool
 		// read .keepass.json for session token

@@ -149,18 +149,6 @@ func unloadPages() {
 	}
 }
 
-func signOutAction() {
-	notify("sign out initiated")
-	gotoPage(0)
-
-	clearMenu()
-	unloadPages()
-
-	loadPages(signedOutSlides())
-	gotoPage(0)
-	app.Draw()
-}
-
 func newmenubar() *tview.TextView {
 	return tview.NewTextView().
 		SetDynamicColors(true).
@@ -216,4 +204,3 @@ func aboutPage() (title string, content tview.Primitive) {
 	aboutView.SetBorderPadding(4, 0, 4, 0)
 	return "About", aboutView
 }
-
