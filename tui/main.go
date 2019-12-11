@@ -37,16 +37,21 @@ func init() {
 
 	pages = tview.NewPages()
 
-	menubar = newmenubar()
+	menubar = newMenuBar()
 
-	notification = tview.NewTextView().SetWordWrap(true).SetChangedFunc(func() {
-		app.Draw()
-	})
-	notification.SetBorder(true)
-	notification.SetTitle("Debug")
+	notification = newDebugBox()
 
 	slides = signedOutSlides()
 
+}
+
+func newDebugBox() *tview.TextView {
+	box := tview.NewTextView().SetWordWrap(true).SetChangedFunc(func() {
+		app.Draw()
+	})
+	box.SetBorderPadding(0, 0, 0, 0)
+	box.SetBorder(true).SetTitle("Debug")
+	return box
 }
 
 func signedInSlides() []Slide {
@@ -105,7 +110,7 @@ func main() {
 	rows = tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(menubar, 1, 1, false).
 		AddItem(pages, 0, 9, true).
-		AddItem(notification, 0, 4, false)
+		AddItem(notification, 3, 1, false)
 
 	flex.AddItem(rows, 0, 1, true)
 
@@ -149,18 +154,11 @@ func unloadPages() {
 	}
 }
 
-func newmenubar() *tview.TextView {
+func newMenuBar() *tview.TextView {
 	return tview.NewTextView().
 		SetDynamicColors(true).
 		SetRegions(true).
 		SetWrap(false)
-}
-
-func newbox(title string) *tview.Box {
-	return tview.NewBox().
-		SetBorder(true).
-		SetBorderAttributes(tcell.AttrBold).
-		SetTitle(title)
 }
 
 func newtable(capture func(event *tcell.EventKey) *tcell.EventKey) *tview.Table {

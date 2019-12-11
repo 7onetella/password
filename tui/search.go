@@ -128,7 +128,6 @@ func showSearchResults() {
 			d := pi.Data
 			editUUID = d.ID
 			_, p := editPage(d.Title, d.URL, d.Username, d.Password, d.Notes)
-			// fmt.Fprintf(menubar, `%d ["%d"][darkcyan]%s[white][""]  `, index+1, index, title)
 			pages.AddPage("Edit", p, true, true)
 
 			return nil
