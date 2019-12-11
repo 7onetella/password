@@ -170,7 +170,7 @@ func loadPages(newslides []Slide) {
 }
 
 func unloadPages() {
-	for index := range signedOutSlides() {
+	for index := range slides {
 		if index == 0 {
 			continue
 		}

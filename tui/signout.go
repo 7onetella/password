@@ -20,6 +20,7 @@ func signOutAction() {
 	clearMenu()
 	unloadPages()
 
+	slides = signedOutSlides()
 	loadPages(signedOutSlides())
 	gotoPage(0)
 	app.Draw()
