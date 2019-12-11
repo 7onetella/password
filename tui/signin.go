@@ -23,8 +23,8 @@ func NewSigninForm() (title string, content tview.Primitive) {
 		AddInputField("Username:", "", 20, nil, nil).
 		AddPasswordField("Password:", "", 20, '*', nil).
 		AddButton("Sing In", signinAction)
-
-	f.SetBorder(true).SetTitle("Sign In")
+	f.SetBorder(true)
+	f.SetBorderPadding(1, 1, 2, 1)
 	signinForm = f
 	return "Sign in", f
 }

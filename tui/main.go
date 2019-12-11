@@ -17,7 +17,7 @@ var pages *tview.Pages
 
 var menubar *tview.TextView
 
-var app *tview.Application
+var app = tview.NewApplication()
 
 var notification *tview.TextView
 
@@ -35,8 +35,6 @@ var credentials model.Credentials
 
 func init() {
 
-	app = tview.NewApplication()
-
 	pages = tview.NewPages()
 
 	menubar = newmenubar()
@@ -53,7 +51,7 @@ func init() {
 
 func signedInSlides() []Slide {
 	return []Slide{
-		home,
+		homePage,
 		NewSlide,
 		NewPasswordSlide,
 		signout,
@@ -62,8 +60,8 @@ func signedInSlides() []Slide {
 
 func signedOutSlides() []Slide {
 	return []Slide{
-		home,
-		about,
+		homePage,
+		aboutPage,
 		NewSigninForm,
 	}
 }
@@ -137,7 +135,7 @@ func clearMenu() {
 func loadPages(newslides []Slide) {
 	for index, slide := range newslides {
 		title, primitive := slide()
-		fmt.Fprintf(menubar, `%d ["%d"][darkcyan]%s[white][""]  `, index+1, index, title)
+		fmt.Fprintf(menubar, `["%d"][darkcyan]%s[white][""]  `, index, title)
 		pages.AddPage(strconv.Itoa(index), primitive, true, index == currentSlide)
 	}
 }
@@ -196,26 +194,26 @@ func newtable(capture func(event *tcell.EventKey) *tcell.EventKey) *tview.Table 
 	return table
 }
 
-func home() (title string, content tview.Primitive) {
+func homePage() (title string, content tview.Primitive) {
 	homeView := tview.NewTextView().SetWordWrap(true)
-	fmt.Fprint(homeView, `
-	Hello, my dear wife, love of my life!
+	fmt.Fprint(homeView, `    Hello, my dear wife, love of my life!
 	I created this app for you to manage your passwords.
 	
 	I love you.	`)
 	homeView.SetBorder(true)
+	homeView.SetBorderPadding(4, 0, 4, 0)
 	return "Home", homeView
 }
 
-func about() (title string, content tview.Primitive) {
+func aboutPage() (title string, content tview.Primitive) {
 	aboutView := tview.NewTextView().SetWordWrap(true)
-	fmt.Fprint(aboutView, `
-	Motivation
+	fmt.Fprint(aboutView, `    Motivation
 
 	It's hard to remember so many accounts and their login credentials. 
-	I decided to learn emberjs and create a tool in the process.
+	I decided to learn rivo/tview and create a tool in the process.
 	`)
 	aboutView.SetBorder(true)
+	aboutView.SetBorderPadding(4, 0, 4, 0)
 	return "About", aboutView
 }
 
