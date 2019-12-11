@@ -49,7 +49,7 @@ func signinAction() {
 	WriteAuthToken(svc.Token, svc.Expiration)
 	go RefreshTokenInBackground(svc)
 
-	gotoSlide(0)
+	gotoPage(0)
 
 	clearMenu()
 	unloadPages()
@@ -57,7 +57,7 @@ func signinAction() {
 	slides = signedInSlides()
 	loadPages(signedInSlides())
 
-	gotoSlide(0)
+	gotoPage(0)
 	app.Draw()
 }
 

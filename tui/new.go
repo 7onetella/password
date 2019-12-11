@@ -50,7 +50,7 @@ func saveAction() {
 
 	newPageReset()
 
-	gotoSlide(2)
+	gotoPage(2)
 
 	app.SetFocus(searchBar)
 

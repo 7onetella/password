@@ -76,19 +76,19 @@ func notify(message string) {
 	// }()
 }
 
-func gotoSlide(index int) {
+func gotoPage(index int) {
 	currentSlide = index
 	menubar.Highlight(strconv.Itoa(index)).ScrollToHighlight()
 	pages.SwitchToPage(strconv.Itoa(index))
 }
 
-func previousSlide() {
+func previousPage() {
 	currentSlide = (currentSlide - 1 + len(slides)) % len(slides)
 	menubar.Highlight(strconv.Itoa(currentSlide)).ScrollToHighlight()
 	pages.SwitchToPage(strconv.Itoa(currentSlide))
 }
 
-func nextSlide() {
+func nextPage() {
 	currentSlide = (currentSlide + 1) % len(slides)
 	menubar.Highlight(strconv.Itoa(currentSlide)).ScrollToHighlight()
 	pages.SwitchToPage(strconv.Itoa(currentSlide))
@@ -111,9 +111,9 @@ func main() {
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyCtrlL {
-			nextSlide()
+			nextPage()
 		} else if event.Key() == tcell.KeyCtrlH {
-			previousSlide()
+			previousPage()
 		} else if event.Key() == tcell.KeyCtrlL {
 			notification.Clear()
 			app.Draw()
@@ -151,13 +151,13 @@ func unloadPages() {
 
 func signOutAction() {
 	notify("sign out initiated")
-	gotoSlide(0)
+	gotoPage(0)
 
 	clearMenu()
 	unloadPages()
 
 	loadPages(signedOutSlides())
-	gotoSlide(0)
+	gotoPage(0)
 	app.Draw()
 }
 
@@ -217,9 +217,3 @@ func aboutPage() (title string, content tview.Primitive) {
 	return "About", aboutView
 }
 
-func signOutPage() (title string, content tview.Primitive) {
-	f := tview.NewForm().
-		AddButton("Sign Out", signOutAction)
-	f.SetBorder(true).SetTitle("Sign Out")
-	return "Sign Out", f
-}

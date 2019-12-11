@@ -51,7 +51,7 @@ func updateAction() {
 
 	newPageReset()
 
-	gotoSlide(2)
+	gotoPage(2)
 	showSearchResults()
 
 	app.SetFocus(searchBar)
@@ -68,7 +68,7 @@ func deleteAction() {
 
 	newPageReset()
 
-	gotoSlide(2)
+	gotoPage(2)
 
 	app.SetFocus(searchBar)
 
