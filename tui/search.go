@@ -87,7 +87,7 @@ func showSearchResults() {
 			Reference:       password.ID,
 			Text:            password.Title,
 			Align:           tview.AlignLeft,
-			Color:           tview.Styles.PrimaryTextColor,
+			Color:           tcell.ColorDarkCyan,
 			BackgroundColor: tcell.ColorDefault,
 		})
 		// passwordsTable.SetCellSimple(0, 0, password.Title)
@@ -112,7 +112,7 @@ func showSearchResults() {
 	passwordsTable.SetSelectable(true, false)
 	// passwordsTable.SetSeparator(tview.Borders.Vertical)
 	passwordsTable.SetSeparator(' ')
-	passwordsTable.SetSelectedStyle(tcell.ColorBlack, tcell.ColorGray, tcell.AttrNone)
+	passwordsTable.SetSelectedStyle(tcell.ColorBlack, tcell.ColorWhite, tcell.AttrNone)
 
 	passwordsTable.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyTab {

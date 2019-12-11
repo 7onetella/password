@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/7onetella/password/api/client"
 	"github.com/7onetella/password/api/model"
@@ -35,6 +36,8 @@ var svc *client.PasswordService
 var credentials model.Credentials
 
 var isDebugOn = true
+
+var prevP tview.Primitive
 
 func init() {
 
@@ -75,16 +78,20 @@ func signedOutSlides() []Slide {
 }
 
 func notify(message string) {
-	// notification.Clear()
 	if isDebugOn {
-		// fmt.Fprint(notification, message+"\n")
-		notification.InsertRow(0).SetCellSimple(0, 0, message)
+		// lastRow := notification.GetRowCount()
+		lastRow := 0
+		notification.InsertRow(lastRow)
+		notification.SetCell(lastRow, 0, &tview.TableCell{
+			Text:            time.Now().Format(time.RFC3339),
+			Align:           tview.AlignLeft,
+			Color:           tcell.ColorDarkCyan,
+			BackgroundColor: tcell.ColorDefault,
+		})
+		notification.SetCellSimple(lastRow, 1, message)
+		app.Draw()
+		notification.ScrollToEnd()
 	}
-	// go func() {
-	// 	time.Sleep(3 * time.Second)
-	// 	notification.Clear()
-	// 	app.Draw()
-	// }()
 }
 
 func gotoPage(index int) {
@@ -141,7 +148,12 @@ func main() {
 			}
 			app.Draw()
 		case tcell.KeyCtrlD:
-			app.SetFocus(notification)
+			if !notification.HasFocus() {
+				prevP = app.GetFocus()
+				app.SetFocus(notification)
+			} else {
+				app.SetFocus(prevP)
+			}
 			app.Draw()
 		default:
 			// do nothing
@@ -190,9 +202,10 @@ func newtable() *tview.Table {
 		SetBorders(false).
 		InsertColumn(0).
 		InsertRow(0).
-		SetCellSimple(0, 0, "").
+		InsertColumn(0).
+		InsertColumn(0).
 		SetSelectable(true, false).
-		SetSelectedStyle(tcell.ColorGray, tcell.ColorBlack, tcell.AttrNone)
+		SetSelectedStyle(tcell.ColorBlack, tcell.ColorWhite, tcell.AttrNone)
 	return table
 }
 

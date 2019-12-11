@@ -12,13 +12,14 @@ var updateform *tview.Form
 func editPage(title, url, username, password, notes string) (string, tview.Primitive) {
 	notify("loading new slide")
 
-	f := tview.NewForm().AddInputField("Title:", title, 30, nil, nil).
+	f := tview.NewForm().AddInputField("Title:", title, 60, nil, nil).
 		AddInputField("URL:", url, 60, nil, nil).
-		AddInputField("Username:", username, 30, nil, nil).
-		AddInputField("Password:", password, 30, nil, nil).
+		AddInputField("Username:", username, 60, nil, nil).
+		AddInputField("Password:", password, 60, nil, nil).
 		AddInputField("Notes:", notes, 60, nil, nil).
 		AddButton("Update", updateAction).
-		AddButton("Delete", deleteAction)
+		AddButton("Delete", deleteAction).
+		AddButton("Cancel", cancelAction)
 
 	f.SetBorderPadding(1, 1, 2, 2)
 	f.SetBorder(true)
@@ -65,6 +66,18 @@ func deleteAction() {
 	if err != nil {
 		notify("error while updating password: " + err.Error())
 	}
+
+	newPageReset()
+
+	gotoPage(2)
+
+	app.SetFocus(searchBar)
+
+	app.Draw()
+
+}
+
+func cancelAction() {
 
 	newPageReset()
 

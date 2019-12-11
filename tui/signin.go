@@ -184,7 +184,7 @@ func RefreshTokenInBackground(svc *client.PasswordService) {
 						notify("error while refreshing token")
 						continue
 					}
-					notify("token refreshed")
+					notify("refreshing token successful")
 					WriteAuthToken(svc.Token, svc.Expiration)
 				}
 			} else {
