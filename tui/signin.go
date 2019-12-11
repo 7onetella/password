@@ -15,23 +15,24 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 )
 
-var signinForm *tview.Form
+var signinForm = tview.NewForm()
 
-// NewSigninForm returns signin form
-func NewSigninForm() (title string, content tview.Primitive) {
-	f := tview.NewForm().
+func signInPage() (title string, content tview.Primitive) {
+	signinForm.Clear(true)
+	signInPageReset()
+	return "Sign in", signinForm
+}
+
+func signInPageReset() {
+	signinForm.
 		AddInputField("Username:", "", 20, nil, nil).
 		AddPasswordField("Password:", "", 20, '*', nil).
 		AddButton("Sing In", signinAction)
-	f.SetBorder(true)
-	f.SetBorderPadding(1, 1, 2, 1)
-	signinForm = f
-	return "Sign in", f
+
+	signinForm.SetBorder(true).SetBorderPadding(1, 1, 2, 1)
 }
 
 func signinAction() {
-	notify("sign in initiated")
-
 	var err error
 	svc, err = client.NewPasswordService()
 	if err != nil {
@@ -39,8 +40,6 @@ func signinAction() {
 	}
 	username := getInputValue(signinForm, "Username:")
 	password := getInputValue(signinForm, "Password:")
-	notify("username is " + username)
-	notify("password is " + password)
 
 	credentials := model.Credentials{
 		Username: username,

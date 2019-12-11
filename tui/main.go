@@ -52,9 +52,9 @@ func init() {
 func signedInSlides() []Slide {
 	return []Slide{
 		homePage,
-		NewSlide,
-		NewPasswordSlide,
-		signout,
+		newPage,
+		searchPage,
+		signOutPage,
 	}
 }
 
@@ -62,7 +62,7 @@ func signedOutSlides() []Slide {
 	return []Slide{
 		homePage,
 		aboutPage,
-		NewSigninForm,
+		signInPage,
 	}
 }
 
@@ -217,7 +217,7 @@ func aboutPage() (title string, content tview.Primitive) {
 	return "About", aboutView
 }
 
-func signout() (title string, content tview.Primitive) {
+func signOutPage() (title string, content tview.Primitive) {
 	f := tview.NewForm().
 		AddButton("Sign Out", signOutAction)
 	f.SetBorder(true).SetTitle("Sign Out")

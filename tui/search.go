@@ -10,21 +10,18 @@ import (
 )
 
 var passwordsTable *tview.Table
-var searchbar *tview.Form
+var searchBar *tview.Form
 
-// NewPasswordSlide returns new password slide
-func NewPasswordSlide() (title string, content tview.Primitive) {
-	notify("loading password slide")
-
+func searchPage() (title string, content tview.Primitive) {
 	flex := tview.NewFlex()
-	searchbar = tview.NewForm()
-	updatesearchbar(searchbar)
+	searchBar = tview.NewForm()
+	searchBarReset(searchBar)
 
 	passwordsTable = tview.NewTable()
 	passwordsTable.SetBorders(true).SetTitle("Results")
 
 	rows := tview.NewFlex().SetDirection(tview.FlexRow).
-		AddItem(searchbar, 0, 3, true).
+		AddItem(searchBar, 0, 3, true).
 		AddItem(passwordsTable, 0, 10, true)
 	flex.AddItem(rows, 0, 1, true)
 
@@ -33,7 +30,7 @@ func NewPasswordSlide() (title string, content tview.Primitive) {
 	return "Password", flex
 }
 
-func updatesearchbar(f *tview.Form) {
+func searchBarReset(f *tview.Form) {
 	f.AddInputField("Title:", "", 0, nil, nil)
 	f.SetBorderPadding(0, 0, 0, 0)
 	item := f.GetFormItemByLabel("Title:")
@@ -42,8 +39,7 @@ func updatesearchbar(f *tview.Form) {
 	if ok {
 		textField.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 			if event.Key() == tcell.KeyEnter {
-				notify("enter key pressed")
-				showPasswords()
+				showSearchResults()
 				defer app.SetFocus(passwordsTable)
 				defer app.Draw()
 				return nil
@@ -53,11 +49,10 @@ func updatesearchbar(f *tview.Form) {
 	}
 }
 
-func showPasswords() {
-	notify("table received focus")
+func showSearchResults() {
 
 	input := model.ListPasswordsInput{}
-	searchby := getInputValue(searchbar, "Title:")
+	searchby := getInputValue(searchBar, "Title:")
 	input.Title = "%%"
 	if len(searchby) > 0 {
 		input.Title = searchby
@@ -103,10 +98,10 @@ func showPasswords() {
 	passwordsTable.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyTab {
 			notify("tab key pressed")
-			searchbar.Clear(true)
-			updatesearchbar(searchbar)
+			searchBar.Clear(true)
+			searchBarReset(searchBar)
 			app.Draw()
-			app.SetFocus(searchbar)
+			app.SetFocus(searchBar)
 			return nil
 		}
 
@@ -132,7 +127,7 @@ func showPasswords() {
 			}
 			d := pi.Data
 			editUUID = d.ID
-			_, p := EditSlide(d.Title, d.URL, d.Username, d.Password, d.Notes)
+			_, p := editPage(d.Title, d.URL, d.Username, d.Password, d.Notes)
 			// fmt.Fprintf(menubar, `%d ["%d"][darkcyan]%s[white][""]  `, index+1, index, title)
 			pages.AddPage("Edit", p, true, true)
 
