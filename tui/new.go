@@ -9,12 +9,12 @@ import (
 var newPageForm = tview.NewForm()
 
 func newPage() (title string, content tview.Primitive) {
-	newPageForm.Clear(true)
 	newPageReset()
 	return "New", newPageForm
 }
 
 func newPageReset() {
+	newPageForm.Clear(true)
 	newPageForm.AddInputField("Title:", "", 30, nil, nil).
 		AddInputField("URL:", "", 60, nil, nil).
 		AddInputField("Username:", "", 30, nil, nil).

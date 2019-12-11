@@ -19,7 +19,8 @@ var menubar *tview.TextView
 
 var app = tview.NewApplication()
 
-var notification *tview.TextView
+var debugView *tview.Flex
+var notification *tview.Table
 
 var currentSlide = 0
 
@@ -33,13 +34,15 @@ var svc *client.PasswordService
 
 var credentials model.Credentials
 
+var isDebugOn = true
+
 func init() {
 
 	pages = tview.NewPages()
 
 	menubar = newMenuBar()
 
-	notification = newDebugBox()
+	notification = newtable()
 
 	slides = signedOutSlides()
 
@@ -73,7 +76,10 @@ func signedOutSlides() []Slide {
 
 func notify(message string) {
 	// notification.Clear()
-	fmt.Fprint(notification, message+"\n")
+	if isDebugOn {
+		// fmt.Fprint(notification, message+"\n")
+		notification.InsertRow(0).SetCellSimple(0, 0, message)
+	}
 	// go func() {
 	// 	time.Sleep(3 * time.Second)
 	// 	notification.Clear()
@@ -109,20 +115,38 @@ func main() {
 
 	rows = tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(menubar, 1, 1, false).
-		AddItem(pages, 0, 9, true).
-		AddItem(notification, 3, 1, false)
+		AddItem(pages, 0, 9, true)
 
 	flex.AddItem(rows, 0, 1, true)
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Key() == tcell.KeyCtrlL {
+
+		switch event.Key() {
+		case tcell.KeyCtrlL:
 			nextPage()
-		} else if event.Key() == tcell.KeyCtrlH {
+		case tcell.KeyCtrlH:
 			previousPage()
-		} else if event.Key() == tcell.KeyCtrlL {
-			notification.Clear()
+		case tcell.KeyCtrlO:
+			if isDebugOn {
+				isDebugOn = false
+				rows.RemoveItem(debugView)
+			} else {
+				isDebugOn = true
+				if debugView == nil {
+					debugView = tview.NewFlex().AddItem(notification, 0, 1, false)
+					debugView.SetBorder(true).SetBorderPadding(0, 0, 0, 0)
+					debugView.SetTitle("Debug")
+				}
+				rows.AddItem(debugView, 10, 2, false)
+			}
 			app.Draw()
+		case tcell.KeyCtrlD:
+			app.SetFocus(notification)
+			app.Draw()
+		default:
+			// do nothing
 		}
+
 		return event
 	})
 
@@ -161,22 +185,14 @@ func newMenuBar() *tview.TextView {
 		SetWrap(false)
 }
 
-func newtable(capture func(event *tcell.EventKey) *tcell.EventKey) *tview.Table {
-	table := tview.NewTable()
-	table.SetBorders(true)
-	table.InsertColumn(0)
-	table.InsertRow(0)
-	table.SetCellSimple(0, 0, "cell")
-	table.SetBorder(true)
-
-	table.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Key() == tcell.KeyRight {
-			notify("arrow key pressed")
-			return nil
-		}
-		return event
-	})
-
+func newtable() *tview.Table {
+	table := tview.NewTable().
+		SetBorders(false).
+		InsertColumn(0).
+		InsertRow(0).
+		SetCellSimple(0, 0, "").
+		SetSelectable(true, false).
+		SetSelectedStyle(tcell.ColorGray, tcell.ColorBlack, tcell.AttrNone)
 	return table
 }
 

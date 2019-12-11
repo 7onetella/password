@@ -94,6 +94,7 @@ func showSearchResults() {
 	passwordsTable.SetCellSimple(0, 1, "Username")
 	passwordsTable.SetCellSimple(0, 2, "URL")
 	passwordsTable.SetSelectable(true, false)
+	passwordsTable.SetSelectedStyle(tcell.ColorYellow, tcell.ColorBlack, tcell.AttrNone)
 
 	passwordsTable.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyTab {
