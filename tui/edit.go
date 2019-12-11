@@ -20,7 +20,7 @@ func editPage(title, url, username, password, notes string) (string, tview.Primi
 		AddButton("Update", updateAction).
 		AddButton("Delete", deleteAction)
 
-	f.SetBorderPadding(1, 1, 1, 1)
+	f.SetBorderPadding(1, 1, 2, 2)
 	f.SetBorder(true)
 	updateform = f
 	return "Edit", f
