@@ -55,8 +55,9 @@ func signinAction() {
 	clearMenu()
 	unloadPages()
 
-	loadMenu([]string{"Home", "Password", "Sign Out"})
+	slides = signedInSlides()
 	loadPages(signedInSlides())
+
 	gotoSlide(0)
 	app.Draw()
 }

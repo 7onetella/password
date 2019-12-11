@@ -54,6 +54,7 @@ func init() {
 func signedInSlides() []Slide {
 	return []Slide{
 		home,
+		NewSlide,
 		NewPasswordSlide,
 		signout,
 	}
@@ -101,7 +102,6 @@ func main() {
 
 	menubar.Highlight(strconv.Itoa(currentSlide))
 
-	loadMenu([]string{"Home", "About", "Sign In"})
 	loadPages(slides)
 
 	rows = tview.NewFlex().SetDirection(tview.FlexRow).
@@ -134,15 +134,10 @@ func clearMenu() {
 	app.Draw()
 }
 
-func loadMenu(menuitems []string) {
-	for index, title := range menuitems {
-		fmt.Fprintf(menubar, `%d ["%d"][darkcyan]%s[white][""]  `, index+1, index, title)
-	}
-}
-
 func loadPages(newslides []Slide) {
 	for index, slide := range newslides {
-		_, primitive := slide()
+		title, primitive := slide()
+		fmt.Fprintf(menubar, `%d ["%d"][darkcyan]%s[white][""]  `, index+1, index, title)
 		pages.AddPage(strconv.Itoa(index), primitive, true, index == currentSlide)
 	}
 }
@@ -163,7 +158,6 @@ func signOutAction() {
 	clearMenu()
 	unloadPages()
 
-	loadMenu([]string{"Home", "About", "Sign In"})
 	loadPages(signedOutSlides())
 	gotoSlide(0)
 	app.Draw()

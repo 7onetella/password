@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/7onetella/password/api/model"
@@ -81,7 +82,14 @@ func showPasswords() {
 
 	for _, password := range result.Items {
 		passwordsTable.InsertRow(0)
-		passwordsTable.SetCellSimple(0, 0, password.Title)
+		passwordsTable.SetCell(0, 0, &tview.TableCell{
+			Reference:       password.ID,
+			Text:            password.Title,
+			Align:           tview.AlignLeft,
+			Color:           tview.Styles.PrimaryTextColor,
+			BackgroundColor: tcell.ColorDefault,
+		})
+		// passwordsTable.SetCellSimple(0, 0, password.Title)
 		passwordsTable.SetCellSimple(0, 1, password.Username)
 		passwordsTable.SetCellSimple(0, 2, password.URL)
 	}
@@ -101,6 +109,36 @@ func showPasswords() {
 			app.SetFocus(searchbar)
 			return nil
 		}
+
+		if event.Key() == tcell.KeyEnter {
+			notify("enter key pressed")
+			row, _ := passwordsTable.GetSelection()
+			notify(fmt.Sprintf("row = %d", row))
+
+			ref := passwordsTable.GetCell(row, 0).GetReference()
+			id, _ := ref.(string)
+			col1 := passwordsTable.GetCell(row, 0).Text
+			col2 := passwordsTable.GetCell(row, 1).Text
+			col3 := passwordsTable.GetCell(row, 2).Text
+
+			notify("id = " + id)
+			notify("col1 = " + col1)
+			notify("col2 = " + col2)
+			notify("col3 = " + col3)
+
+			pi, err := svc.ReadPassword(id)
+			if err != nil {
+				notify("error while reading: " + err.Error())
+			}
+			d := pi.Data
+			editUUID = d.ID
+			_, p := EditSlide(d.Title, d.URL, d.Username, d.Password, d.Notes)
+			// fmt.Fprintf(menubar, `%d ["%d"][darkcyan]%s[white][""]  `, index+1, index, title)
+			pages.AddPage("Edit", p, true, true)
+
+			return nil
+		}
+
 		return event
 	})
 
