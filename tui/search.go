@@ -11,7 +11,7 @@ import (
 
 var passwordsTable *tview.Table
 var searchBar *tview.Form
-var pagePassword = "Password"
+var pageSearch = "Search"
 
 func searchPage() (title string, content tview.Primitive) {
 	flex := tview.NewFlex()
@@ -34,7 +34,7 @@ func searchPage() (title string, content tview.Primitive) {
 
 	flex.SetBorder(true).SetBorderPadding(1, 1, 2, 2)
 
-	return pagePassword, flex
+	return pageSearch, flex
 }
 
 func searchBarReset(f *tview.Form) {

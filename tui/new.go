@@ -50,8 +50,8 @@ func saveAction() {
 
 	newPageReset()
 
-	gotoPage(2)
-
+	gotoPage(pageSearch)
+	showSearchResults()
 	app.SetFocus(searchBar)
 
 	app.Draw()

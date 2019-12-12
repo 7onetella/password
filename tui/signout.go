@@ -15,13 +15,13 @@ func signOutPage() (title string, content tview.Primitive) {
 func signOutAction() {
 	isSignedIn = false
 	debug("sign out initiated")
-	gotoPage(0)
+	gotoPage(pageHome)
 
 	clearMenu()
 	unloadPages()
 
 	slides = signedOutSlides()
 	loadPages(signedOutSlides())
-	gotoPage(0)
+	gotoPage(pageHome)
 	app.Draw()
 }

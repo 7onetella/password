@@ -92,7 +92,8 @@ func debug(message string) {
 	}
 }
 
-func gotoPage(index int) {
+func gotoPage(pageTitle string) {
+	index, _ := strconv.Atoi(pageIndex[pageTitle])
 	currentSlide = index
 	menubar.Highlight(strconv.Itoa(index)).ScrollToHighlight()
 	pages.SwitchToPage(strconv.Itoa(index))
@@ -211,6 +212,8 @@ func newtable() *tview.Table {
 	return table
 }
 
+var pageHome = "Home"
+
 func homePage() (title string, content tview.Primitive) {
 	homeView := tview.NewTextView().SetWordWrap(true)
 	fmt.Fprint(homeView, `    Hello, my dear wife, love of my life!
@@ -219,7 +222,7 @@ func homePage() (title string, content tview.Primitive) {
 	I love you.	`)
 	homeView.SetBorder(true)
 	homeView.SetBorderPadding(4, 0, 4, 0)
-	return "Home", homeView
+	return pageHome, homeView
 }
 
 func aboutPage() (title string, content tview.Primitive) {

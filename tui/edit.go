@@ -50,12 +50,10 @@ func updateAction() {
 		debug("error while updating password: " + err.Error())
 	}
 
-	newPageReset()
-
-	gotoPage(2)
+	gotoPage(pageSearch)
 	showSearchResults()
-
 	app.SetFocus(searchBar)
+	editUUID = ""
 
 	app.Draw()
 }
@@ -67,11 +65,10 @@ func deleteAction() {
 		debug("error while updating password: " + err.Error())
 	}
 
-	newPageReset()
-
-	gotoPage(2)
-
+	gotoPage(pageSearch)
+	showSearchResults()
 	app.SetFocus(searchBar)
+	editUUID = ""
 
 	app.Draw()
 
@@ -79,11 +76,10 @@ func deleteAction() {
 
 func cancelAction() {
 
-	newPageReset()
-
-	gotoPage(2)
-
+	gotoPage(pageSearch)
+	showSearchResults()
 	app.SetFocus(searchBar)
+	editUUID = ""
 
 	app.Draw()
 
