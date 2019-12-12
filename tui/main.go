@@ -33,7 +33,7 @@ var svc *client.PasswordService
 
 var credentials model.Credentials
 
-var isDebugOn = true
+var isDebugOn = false
 
 var prevP tview.Primitive
 
@@ -76,20 +76,17 @@ func signedOutSlides() []Slide {
 }
 
 func debug(message string) {
-	if isDebugOn {
-		// lastRow := notification.GetRowCount()
-		lastRow := 0
-		notification.InsertRow(lastRow)
-		notification.SetCell(lastRow, 0, &tview.TableCell{
-			Text:            time.Now().Format(time.RFC3339),
-			Align:           tview.AlignLeft,
-			Color:           tcell.ColorDarkCyan,
-			BackgroundColor: tcell.ColorDefault,
-		})
-		notification.SetCellSimple(lastRow, 1, message)
-		app.Draw()
-		notification.ScrollToEnd()
-	}
+	lastRow := 0
+	notification.InsertRow(lastRow)
+	notification.SetCell(lastRow, 0, &tview.TableCell{
+		Text:            time.Now().Format(time.RFC3339),
+		Align:           tview.AlignLeft,
+		Color:           tcell.ColorDarkCyan,
+		BackgroundColor: tcell.ColorDefault,
+	})
+	notification.SetCellSimple(lastRow, 1, message)
+	app.Draw()
+	notification.ScrollToEnd()
 }
 
 func gotoPage(pageTitle string) {

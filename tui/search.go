@@ -47,8 +47,14 @@ func searchBarReset(f *tview.Form) {
 		textField.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 			if event.Key() == tcell.KeyEnter {
 				showSearchResults()
-				defer app.SetFocus(passwordsTable)
+				app.SetFocus(searchBar)
 				defer app.Draw()
+				return nil
+			}
+			if event.Key() == tcell.KeyTab {
+				debug("search textbox: tab pressed")
+				app.SetFocus(passwordsTable)
+				app.Draw()
 				return nil
 			}
 			return event
