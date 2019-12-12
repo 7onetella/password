@@ -44,6 +44,7 @@ func gotoPage(title string) {
 	currentSlide = index
 	menubar.Highlight(indexStr).ScrollToHighlight()
 	pages.SwitchToPage(indexStr)
+	app.Draw()
 }
 
 func previousPage() {

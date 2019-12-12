@@ -24,5 +24,4 @@ func signOut() {
 	pageitems = SignedOutPages()
 	loadPages()
 	gotoPage(pageHome)
-	app.Draw()
 }

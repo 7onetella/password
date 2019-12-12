@@ -90,7 +90,6 @@ func signinAction() {
 	loadPages()
 
 	gotoPage(pageHome)
-	app.Draw()
 }
 
 func getInputValue(form *tview.Form, label string) string {
@@ -207,11 +206,10 @@ func authPrompt(msg string) *tview.Modal {
 		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
 			if buttonLabel == "OK" {
 				signOut()
+				gotoPage("Sign In")
 				if err := app.SetRoot(flex, true).Run(); err != nil {
 					panic(err)
 				}
-				gotoPage("Sign In")
-				app.Draw()
 			}
 		})
 	return modal
