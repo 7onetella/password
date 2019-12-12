@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"strconv"
-	"time"
 
 	"github.com/7onetella/password/api/client"
 	"github.com/7onetella/password/api/model"
@@ -14,14 +13,11 @@ import (
 // Slide is a function which returns the slide's main primitive and its title.
 type Slide func() (title string, content tview.Primitive)
 
-var pages *tview.Pages
+var pages = tview.NewPages()
 
-var menubar *tview.TextView
+var menubar = newMenuBar()
 
 var app = tview.NewApplication()
-
-var debugView *tview.Flex
-var notification *tview.Table
 
 var currentSlide = 0
 
@@ -36,27 +32,6 @@ var credentials model.Credentials
 var isDebugOn = false
 
 var prevP tview.Primitive
-
-func init() {
-
-	pages = tview.NewPages()
-
-	menubar = newMenuBar()
-
-	notification = newtable()
-
-	slides = signedOutSlides()
-
-}
-
-func newDebugBox() *tview.TextView {
-	box := tview.NewTextView().SetWordWrap(true).SetChangedFunc(func() {
-		app.Draw()
-	})
-	box.SetBorderPadding(0, 0, 0, 0)
-	box.SetBorder(true).SetTitle("Debug")
-	return box
-}
 
 func signedInSlides() []Slide {
 	return []Slide{
@@ -73,20 +48,6 @@ func signedOutSlides() []Slide {
 		aboutPage,
 		signInPage,
 	}
-}
-
-func debug(message string) {
-	lastRow := 0
-	notification.InsertRow(lastRow)
-	notification.SetCell(lastRow, 0, &tview.TableCell{
-		Text:            time.Now().Format(time.RFC3339),
-		Align:           tview.AlignLeft,
-		Color:           tcell.ColorDarkCyan,
-		BackgroundColor: tcell.ColorDefault,
-	})
-	notification.SetCellSimple(lastRow, 1, message)
-	app.Draw()
-	notification.ScrollToEnd()
 }
 
 func gotoPage(pageTitle string) {
@@ -110,6 +71,8 @@ func nextPage() {
 
 func main() {
 
+	slides = signedOutSlides()
+	
 	flex := tview.NewFlex()
 
 	menubar.Highlight(strconv.Itoa(currentSlide))
@@ -197,18 +160,6 @@ func newMenuBar() *tview.TextView {
 		SetDynamicColors(true).
 		SetRegions(true).
 		SetWrap(false)
-}
-
-func newtable() *tview.Table {
-	table := tview.NewTable().
-		SetBorders(false).
-		InsertColumn(0).
-		InsertRow(0).
-		InsertColumn(0).
-		InsertColumn(0).
-		SetSelectable(false, false).
-		SetSelectedStyle(tcell.ColorBlack, tcell.ColorWhite, tcell.AttrNone)
-	return table
 }
 
 var pageHome = "Home"
