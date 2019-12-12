@@ -147,7 +147,9 @@ func main() {
 			if !notification.HasFocus() {
 				prevP = app.GetFocus()
 				app.SetFocus(notification)
+				notification.SetSelectable(true, false)
 			} else {
+				notification.SetSelectable(false, false)
 				app.SetFocus(prevP)
 			}
 			app.Draw()
@@ -204,7 +206,7 @@ func newtable() *tview.Table {
 		InsertRow(0).
 		InsertColumn(0).
 		InsertColumn(0).
-		SetSelectable(true, false).
+		SetSelectable(false, false).
 		SetSelectedStyle(tcell.ColorBlack, tcell.ColorWhite, tcell.AttrNone)
 	return table
 }

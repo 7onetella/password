@@ -54,6 +54,7 @@ func searchBarReset(f *tview.Form) {
 			if event.Key() == tcell.KeyTab {
 				debug("search textbox: tab pressed")
 				app.SetFocus(passwordsTable)
+				passwordsTable.SetSelectable(true, false)
 				app.Draw()
 				return nil
 			}
@@ -116,7 +117,7 @@ func showSearchResults() {
 	passwordsTable.SetCell(0, 1, headerCell("Username"))
 	passwordsTable.SetCell(0, 2, headerCell("URL"))
 
-	passwordsTable.SetSelectable(true, false)
+	passwordsTable.SetSelectable(false, false)
 	// passwordsTable.SetSeparator(tview.Borders.Vertical)
 	passwordsTable.SetSeparator(' ')
 	passwordsTable.SetSelectedStyle(tcell.ColorBlack, tcell.ColorWhite, tcell.AttrNone)
@@ -124,6 +125,7 @@ func showSearchResults() {
 	passwordsTable.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyTab {
 			debug("tab key pressed")
+			passwordsTable.SetSelectable(false, false)
 			searchBar.Clear(true)
 			searchBarReset(searchBar)
 			app.Draw()
