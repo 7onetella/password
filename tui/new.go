@@ -43,10 +43,10 @@ func saveAction() {
 
 	output, err := svc.CreatePassword(input)
 	if err != nil {
-		notify("error while creating password: " + err.Error())
+		debug("error while creating password: " + err.Error())
 	}
 
-	notify("new password created: " + output.Data.ID)
+	debug("new password created: " + output.Data.ID)
 
 	newPageReset()
 

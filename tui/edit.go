@@ -10,7 +10,7 @@ var editUUID string
 var updateform *tview.Form
 
 func editPage(title, url, username, password, notes string) (string, tview.Primitive) {
-	notify("loading new slide")
+	debug("loading new slide")
 
 	f := tview.NewForm().AddInputField("Title:", title, 60, nil, nil).
 		AddInputField("URL:", url, 60, nil, nil).
@@ -47,7 +47,7 @@ func updateAction() {
 
 	err := svc.UpdatePassword(input)
 	if err != nil {
-		notify("error while updating password: " + err.Error())
+		debug("error while updating password: " + err.Error())
 	}
 
 	newPageReset()
@@ -64,7 +64,7 @@ func deleteAction() {
 
 	err := svc.DeletePassword(editUUID)
 	if err != nil {
-		notify("error while updating password: " + err.Error())
+		debug("error while updating password: " + err.Error())
 	}
 
 	newPageReset()

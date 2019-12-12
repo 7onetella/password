@@ -29,8 +29,6 @@ var slides []Slide
 
 var rows *tview.Flex
 
-var signoutform *tview.Form
-
 var svc *client.PasswordService
 
 var credentials model.Credentials
@@ -77,7 +75,7 @@ func signedOutSlides() []Slide {
 	}
 }
 
-func notify(message string) {
+func debug(message string) {
 	if isDebugOn {
 		// lastRow := notification.GetRowCount()
 		lastRow := 0
@@ -173,11 +171,15 @@ func clearMenu() {
 	app.Draw()
 }
 
+var pageIndex = map[string]string{}
+
 func loadPages(newslides []Slide) {
 	for index, slide := range newslides {
 		title, primitive := slide()
 		fmt.Fprintf(menubar, `["%d"][darkcyan]%s[white][""]  `, index, title)
-		pages.AddPage(strconv.Itoa(index), primitive, true, index == currentSlide)
+		indexStr := strconv.Itoa(index)
+		pages.AddPage(indexStr, primitive, true, index == currentSlide)
+		pageIndex[title] = indexStr
 	}
 }
 

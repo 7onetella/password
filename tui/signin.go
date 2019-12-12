@@ -56,7 +56,7 @@ func signinAction() {
 	var err error
 	svc, err = client.NewPasswordService()
 	if err != nil {
-		notify(err.Error())
+		debug(err.Error())
 	}
 	username := getInputValue(signinForm, "Username:")
 	password := getInputValue(signinForm, "Password:")
@@ -75,7 +75,7 @@ func signinAction() {
 			app.Draw()
 		}()
 
-		notify("error while authenticating: " + err.Error())
+		debug("error while authenticating: " + err.Error())
 		return
 	}
 
@@ -162,7 +162,7 @@ func RefreshTokenInBackground(svc *client.PasswordService) {
 		authToken, err := ReadAuthToken()
 		if err != nil {
 			// file may not exist
-			notify("error reading auth token: " + err.Error())
+			debug("error reading auth token: " + err.Error())
 			continue
 		}
 
@@ -173,24 +173,24 @@ func RefreshTokenInBackground(svc *client.PasswordService) {
 
 			if !expired {
 				remaining := expiration - now
-				notify("time left: " + strconv.Itoa(int(remaining)))
+				debug("time left: " + strconv.Itoa(int(remaining)))
 
 				// if less than 30 seconds is left then refresh token
 				if remaining < 110 {
-					notify("refreshing token")
+					debug("refreshing token")
 					svc.Token = authToken.Token
 					err = svc.RefreshToken()
 					if err != nil {
-						notify("error while refreshing token")
+						debug("error while refreshing token")
 						continue
 					}
-					notify("refreshing token successful")
+					debug("refreshing token successful")
 					WriteAuthToken(svc.Token, svc.Expiration)
 				}
 			} else {
 				// if expired then prompt for auth
 				timeElapsed := now - authToken.Expiration
-				notify("time elapsed:" + strconv.Itoa(int(timeElapsed)))
+				debug("time elapsed:" + strconv.Itoa(int(timeElapsed)))
 				continue
 			}
 		}
@@ -198,7 +198,7 @@ func RefreshTokenInBackground(svc *client.PasswordService) {
 		// check expiration
 		// if expired, then prompt for authentication and signin to populate Authentication
 		if expired {
-			notify("token exipred")
+			debug("token exipred")
 			continue
 		}
 

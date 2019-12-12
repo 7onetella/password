@@ -11,6 +11,7 @@ import (
 
 var passwordsTable *tview.Table
 var searchBar *tview.Form
+var pagePassword = "Password"
 
 func searchPage() (title string, content tview.Primitive) {
 	flex := tview.NewFlex()
@@ -33,7 +34,7 @@ func searchPage() (title string, content tview.Primitive) {
 
 	flex.SetBorder(true).SetBorderPadding(1, 1, 2, 2)
 
-	return "Password", flex
+	return pagePassword, flex
 }
 
 func searchBarReset(f *tview.Form) {
@@ -63,19 +64,19 @@ func showSearchResults() {
 	if len(searchby) > 0 {
 		input.Title = searchby
 	}
-	notify("search by = " + searchby)
+	debug("search by = " + searchby)
 
 	result, err := svc.ListPasswords(input)
 	if err != nil {
-		notify("error: " + err.Error())
+		debug("error: " + err.Error())
 		return
 	}
 	if result == nil {
-		notify("result is empty")
+		debug("result is empty")
 		return
 	}
 
-	notify("result size is " + strconv.Itoa(len(result.Items)))
+	debug("result size is " + strconv.Itoa(len(result.Items)))
 	passwordsTable.Clear()
 	passwordsTable.InsertColumn(0)
 	passwordsTable.InsertColumn(0)
@@ -116,7 +117,7 @@ func showSearchResults() {
 
 	passwordsTable.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyTab {
-			notify("tab key pressed")
+			debug("tab key pressed")
 			searchBar.Clear(true)
 			searchBarReset(searchBar)
 			app.Draw()
@@ -125,16 +126,16 @@ func showSearchResults() {
 		}
 
 		if event.Key() == tcell.KeyEnter {
-			notify("enter key pressed")
+			debug("enter key pressed")
 			row, _ := passwordsTable.GetSelection()
-			notify(fmt.Sprintf("row = %d", row))
+			debug(fmt.Sprintf("row = %d", row))
 
 			ref := passwordsTable.GetCell(row, 0).GetReference()
 			id, _ := ref.(string)
-			notify("id = " + id)
+			debug("id = " + id)
 			pi, err := svc.ReadPassword(id)
 			if err != nil {
-				notify("error while reading: " + err.Error())
+				debug("error while reading: " + err.Error())
 			}
 			d := pi.Data
 			editUUID = d.ID

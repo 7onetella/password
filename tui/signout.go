@@ -14,7 +14,7 @@ func signOutPage() (title string, content tview.Primitive) {
 
 func signOutAction() {
 	isSignedIn = false
-	notify("sign out initiated")
+	debug("sign out initiated")
 	gotoPage(0)
 
 	clearMenu()
