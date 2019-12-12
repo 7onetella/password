@@ -10,7 +10,7 @@ var editUUID string
 var updateform *tview.Form
 
 func editPage(title, url, username, password, notes string) (string, tview.Primitive) {
-	debug("loading new slide")
+	debug("loading edit page")
 
 	f := tview.NewForm().AddInputField("Title:", title, 60, nil, nil).
 		AddInputField("URL:", url, 60, nil, nil).

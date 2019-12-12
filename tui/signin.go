@@ -20,7 +20,8 @@ var infoBar = tview.NewTextView()
 var signinForm = tview.NewForm()
 var isSignedIn = false
 
-func signInPage() (title string, content tview.Primitive) {
+// SignInPage returns signin page
+func SignInPage() (title string, content tview.Primitive) {
 	signInFlexView := tview.NewFlex()
 
 	infoBarReset()
@@ -35,7 +36,7 @@ func signInPage() (title string, content tview.Primitive) {
 	signInFlexView.AddItem(rows, 0, 1, true)
 	signInFlexView.SetBorder(true)
 
-	return "Sign in", signInFlexView
+	return "Sign In", signInFlexView
 }
 
 func infoBarReset() {
@@ -53,11 +54,7 @@ func signInPageReset() {
 }
 
 func signinAction() {
-	var err error
-	svc, err = client.NewPasswordService()
-	if err != nil {
-		debug(err.Error())
-	}
+
 	username := getInputValue(signinForm, "Username:")
 	password := getInputValue(signinForm, "Password:")
 
@@ -65,7 +62,7 @@ func signinAction() {
 		Username: username,
 		Password: password,
 	}
-	err = svc.Signin(credentials)
+	err := svc.Signin(credentials)
 	if err != nil {
 		isSignedIn = false
 		infoBar.SetText("Authentication Error").SetTextColor(tcell.ColorRed)
@@ -89,8 +86,8 @@ func signinAction() {
 	clearMenu()
 	unloadPages()
 
-	slides = signedInSlides()
-	loadPages(signedInSlides())
+	pageitems = SignedInPages()
+	loadPages()
 
 	gotoPage(pageHome)
 	app.Draw()
@@ -153,8 +150,9 @@ func WriteAuthToken(token string, expiration int64) error {
 func RefreshTokenInBackground(svc *client.PasswordService) {
 	for {
 		time.Sleep(10 * time.Second)
+		// this shouldn't happen, if it did
 		if !isSignedIn {
-			break
+			return
 		}
 
 		var expired bool
@@ -165,45 +163,56 @@ func RefreshTokenInBackground(svc *client.PasswordService) {
 			debug("error reading auth token: " + err.Error())
 			continue
 		}
-
-		expired = time.Now().Unix() > authToken.Expiration
-		if authToken != nil {
-			now := time.Now().Unix()
-			expiration := authToken.Expiration
-
-			if !expired {
-				remaining := expiration - now
-				debug("time left: " + strconv.Itoa(int(remaining)))
-
-				// if less than 30 seconds is left then refresh token
-				if remaining < 110 {
-					debug("refreshing token")
-					svc.Token = authToken.Token
-					err = svc.RefreshToken()
-					if err != nil {
-						debug("error while refreshing token")
-						continue
-					}
-					debug("refreshing token successful")
-					WriteAuthToken(svc.Token, svc.Expiration)
-				}
-			} else {
-				// if expired then prompt for auth
-				timeElapsed := now - authToken.Expiration
-				debug("time elapsed:" + strconv.Itoa(int(timeElapsed)))
-				continue
-			}
-		}
-
-		// check expiration
-		// if expired, then prompt for authentication and signin to populate Authentication
-		if expired {
-			debug("token exipred")
+		if authToken == nil {
+			debug("auth token is nil")
 			continue
 		}
 
-		// if not expired, then populate service Authentication
-		svc.Authorization = "Bearer " + authToken.Token
-	}
+		expired = time.Now().Unix() > authToken.Expiration
+		now := time.Now().Unix()
+		expiration := authToken.Expiration
 
+		if !expired {
+			remaining := expiration - now
+			// if less than 30 seconds is left then refresh token
+			if remaining < 30 {
+				svc.Token = authToken.Token
+				err = svc.RefreshToken()
+				if err != nil {
+					debug("error while refreshing token")
+					// perhaps the server is busy or temporarily unavailable
+					continue
+				}
+				debug("refreshed token successful")
+				WriteAuthToken(svc.Token, svc.Expiration)
+				// after RefreshToken() svc has the new token
+				continue
+			}
+		} else {
+			// if expired then prompt for auth
+			timeElapsed := now - authToken.Expiration
+			debug("time elapsed since token expired:" + strconv.Itoa(int(timeElapsed)))
+			if err := app.SetRoot(authPrompt("Session Expired"), false).Run(); err != nil {
+				panic(err)
+			}
+			return
+		}
+	}
+}
+
+func authPrompt(msg string) *tview.Modal {
+	modal := tview.NewModal().
+		SetText(msg).
+		AddButtons([]string{"OK"}).
+		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+			if buttonLabel == "OK" {
+				signOut()
+				if err := app.SetRoot(flex, true).Run(); err != nil {
+					panic(err)
+				}
+				gotoPage("Sign In")
+				app.Draw()
+			}
+		})
+	return modal
 }

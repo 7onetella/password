@@ -2,12 +2,14 @@ package main
 
 import (
 	"time"
-	"github.com/rivo/tview"
+
 	"github.com/gdamore/tcell"
+	"github.com/rivo/tview"
 )
 
 var debugView *tview.Flex
 var notification = newDebug()
+var isDebugOn = false
 
 func newDebug() *tview.Table {
 	table := tview.NewTable().
@@ -31,6 +33,6 @@ func debug(message string) {
 		BackgroundColor: tcell.ColorDefault,
 	})
 	notification.SetCellSimple(lastRow, 1, message)
+	notification.ScrollToBeginning()
 	app.Draw()
-	notification.ScrollToEnd()
 }

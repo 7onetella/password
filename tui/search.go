@@ -13,7 +13,8 @@ var passwordsTable *tview.Table
 var searchBar *tview.Form
 var pageSearch = "Search"
 
-func searchPage() (title string, content tview.Primitive) {
+// SearchPage returns search page
+func SearchPage() (title string, content tview.Primitive) {
 	flex := tview.NewFlex()
 	searchBar = tview.NewForm()
 	searchBarReset(searchBar)
@@ -71,7 +72,7 @@ func showSearchResults() {
 	if len(searchby) > 0 {
 		input.Title = searchby
 	}
-	debug("search by = " + searchby)
+	debug("search by: " + searchby)
 
 	result, err := svc.ListPasswords(input)
 	if err != nil {
@@ -136,11 +137,11 @@ func showSearchResults() {
 		if event.Key() == tcell.KeyEnter {
 			debug("enter key pressed")
 			row, _ := passwordsTable.GetSelection()
-			debug(fmt.Sprintf("row = %d", row))
+			debug(fmt.Sprintf("row#: %d", row))
 
 			ref := passwordsTable.GetCell(row, 0).GetReference()
 			id, _ := ref.(string)
-			debug("id = " + id)
+			debug("id: " + id)
 			pi, err := svc.ReadPassword(id)
 			if err != nil {
 				debug("error while reading: " + err.Error())

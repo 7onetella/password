@@ -8,7 +8,8 @@ import (
 
 var newPageForm = tview.NewForm()
 
-func newPage() (title string, content tview.Primitive) {
+// NewPage returns new page
+func NewPage() (title string, content tview.Primitive) {
 	newPageReset()
 	return "New", newPageForm
 }
