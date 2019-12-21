@@ -44,6 +44,22 @@ func NewPasswordService() (*PasswordService, error) {
 	return ps, nil
 }
 
+// NewPasswordServiceWithServerAddress instantiates service with given server addr
+func NewPasswordServiceWithServerAddress(serverAddr string) (*PasswordService, error) {
+	ps := &PasswordService{}
+
+	ps.serverAddr = serverAddr
+
+	ps.stage = os.Getenv("STAGE")
+
+	insecure := os.Getenv("INSECURE")
+	if insecure == "true" {
+		ps.InsecureSkipVerify = true
+	}
+
+	return ps, nil
+}
+
 // RestfulService restful service
 type RestfulService interface {
 	GetEndpoint() string
@@ -103,7 +119,7 @@ func (ps *PasswordService) RefreshToken() error {
 	}
 
 	input := model.RefreshToken{
-		Token: ps.Token,
+		Token:      ps.Token,
 		Expiration: ps.Expiration,
 	}
 
@@ -119,7 +135,6 @@ func (ps *PasswordService) RefreshToken() error {
 
 	return nil
 }
-
 
 // CreatePassword creates password
 func (ps *PasswordService) CreatePassword(input model.PasswordInput) (*model.PasswordOutput, error) {

@@ -1,6 +1,9 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	"net"
 	"os"
 	"strconv"
 
@@ -22,8 +25,18 @@ var svc *client.PasswordService
 var prevFocused tview.Primitive
 
 func init() {
+	stage := os.Getenv("STAGE")
+	if stage == "" {
+		panic("set STAGE environment variable")
+	}
+
+	serverAddr := lookupSRV("password-" + stage + "-app")
+
+	if stage == "localhost" {
+		serverAddr = "localhost:4242"
+	}
 	var err error
-	svc, err = client.NewPasswordService()
+	svc, err = client.NewPasswordServiceWithServerAddress(serverAddr)
 	if err != nil {
 		debug(err.Error())
 	}
@@ -117,4 +130,35 @@ func confirmQuit() *tview.Modal {
 			}
 		})
 	return modal
+}
+
+func lookupSRV(serviceName string) string {
+
+	resolver := &net.Resolver{
+		PreferGo: true,
+		Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
+			d := net.Dialer{}
+			return d.DialContext(ctx, "tcp", net.JoinHostPort("127.0.0.1", "8600"))
+		},
+	}
+
+	name := serviceName + ".service.dc1.consul"
+	_, srvs, err := resolver.LookupSRV(context.Background(), "", "", name)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	for i, srv := range srvs {
+		ips, err := resolver.LookupHost(context.Background(), srv.Target)
+		if err != nil {
+			fmt.Println(err)
+			return ""
+		}
+		// fmt.Printf("target: %s, port: %d, priority: %d, weight: %d", ips[0], srv.Port, srv.Priority, srv.Weight)
+		if i == 0 {
+			return fmt.Sprintf("%s:%d", ips[0], srv.Port)
+		}
+	}
+
+	return ""
 }
