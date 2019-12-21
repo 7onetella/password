@@ -104,10 +104,16 @@ func main() {
 	}
 
 	switch stage {
+	case "localhost":
+		go func() {
+			log.Fatal(srv.ListenAndServeTLS(GetCertAndKey()))
+		}()
+		Register("password-localhost-app", "https", "localhost", 4242, "/api/health", []string{}, "localhost:8500")
 	case "devpass":
 		log.Fatal(srv.ListenAndServe())
-	default:
+	case "keepass":
 		log.Fatal(srv.ListenAndServeTLS(GetCertAndKey()))
+	default:
 	}
 
 	//if stage == "keepass" {
