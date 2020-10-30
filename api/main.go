@@ -34,17 +34,17 @@ func init() {
 
 	URLBase = fmt.Sprintf("http://%s:%s/api", stage, port)
 
-	connStr := GetEnvWithDefault("DB_CONNSTR", "")
+	connStr := GetEnvWithDefault("DB_CONNSTR", "host=tmt-vm11.7onetella.net user=dev password=dev114 dbname=devdb sslmode=disable")
 	dbinst, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic("error while opening db connection")
 	}
 	db = dbinst
 
-	cryptoToken := GetEnvWithDefault("CRYPTO_TOKEN", "")
+	cryptoToken := GetEnvWithDefault("CRYPTO_TOKEN", "test")
 	hmacSecret = []byte(cryptoToken)
 
-	v := GetEnvWithDefault("CREDENTIAL", "")
+	v := GetEnvWithDefault("CREDENTIAL", "John.Smith@example.com:users91234")
 	credentials := strings.Split(v, ";")
 	for _, credential := range credentials {
 		terms := strings.Split(credential, ":")
@@ -105,10 +105,7 @@ func main() {
 
 	switch stage {
 	case "localhost":
-		go func() {
-			log.Fatal(srv.ListenAndServeTLS(GetCertAndKey()))
-		}()
-		Register("password-localhost-app", "https", "localhost", 4242, "/api/health", []string{}, "localhost:8500")
+		log.Fatal(srv.ListenAndServe())
 	case "devpass":
 		log.Fatal(srv.ListenAndServe())
 	case "keepass":

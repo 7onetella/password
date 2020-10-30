@@ -1,2 +1,4 @@
 *.swp
 config.yml
+.idea
+github_release.sh
