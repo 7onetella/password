@@ -26,12 +26,10 @@ require (
 	github.com/gopherjs/gopherjs v0.0.0-20190915194858-d3ddacdb130f // indirect
 	github.com/gorilla/mux v1.7.3
 	github.com/hashicorp/consul/api v1.3.0
-	github.com/hashicorp/go-version v1.2.1 // indirect
 	github.com/jmhodges/levigo v1.0.0 // indirect
 	github.com/lib/pq v1.2.0
 	github.com/markbates/refresh v1.8.0
 	github.com/mattn/go-isatty v0.0.9 // indirect
-	github.com/mitchellh/gox v1.0.1 // indirect
 	github.com/onsi/ginkgo v1.10.1 // indirect
 	github.com/onsi/gomega v1.7.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20190728182440-6a916e37a237 // indirect
