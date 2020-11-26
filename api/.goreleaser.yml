@@ -13,8 +13,6 @@ archives:
 - replacements:
     darwin: Darwin
     linux: Linux
-    windows: Windows
-    386: i386
     amd64: x86_64
 checksum:
   name_template: 'checksums.txt'
@@ -26,12 +24,3 @@ changelog:
     exclude:
     - '^docs:'
     - '^test:'
-brews:
-  -
-    # Github repository to push the tap to.
-    github:
-      owner: 7onetella
-      name: homebrew-password 
-    folder: Formula
-    homepage: https://github.com/7onetella/password 
-    description: password manager 

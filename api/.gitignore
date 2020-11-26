@@ -11,3 +11,4 @@ keepass-crt.pem
 keepass-key.pem
 .password_secrets
 dist
+password

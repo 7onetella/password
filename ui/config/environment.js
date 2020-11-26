@@ -5,7 +5,7 @@ module.exports = function(environment) {
     modulePrefix: 'ui',
     environment,
     rootURL: '/ui',
-    locationType: 'auto',
+    locationType: 'hash',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
@@ -27,13 +27,13 @@ module.exports = function(environment) {
     serverTokenEndpoint: '/api/signin',
     serverTokenRefreshEndpoint: '/api/token-refresh',
     tokenPropertyName: 'token', // Key in server response that contains the access token
-    headers: {}, // Headers to add to the    
+    headers: {}, // Headers to add to the
     tokenExpirationInvalidateSession: true, // Enables session invalidation on token expiration
-    tokenExpireName: 'exp', // Field containing token expiration      
+    tokenExpireName: 'exp', // Field containing token expiration
     refreshAccessTokens: true,
     refreshLeeway: 60, // refresh 0.1 minutes (10 seconds) before expiration
     refreshTokenPropertyName: 'token', // Key in server response that contains the refresh token
-  };       
+  };
 
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
@@ -42,9 +42,9 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
 
-    ENV['ember-simple-auth-token'].serverTokenEndpoint = 'https://localhost:4242/api/signin'
-    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = 'https://localhost:4242/api/token-refresh'
-    ENV.APP.JSONAPIAdaptetHost = 'https://localhost:4242';
+    ENV['ember-simple-auth-token'].serverTokenEndpoint = 'http://localhost:4242/api/signin'
+    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = 'http://localhost:4242/api/token-refresh'
+    ENV.APP.JSONAPIAdaptetHost = 'http://localhost:4242';
   }
 
   if (environment === 'test') {

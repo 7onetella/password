@@ -1,7 +1,7 @@
 #!/bin/sh
 
-echo cross compiling for pi
-gox -osarch="linux/arm"
+echo cross compile
+"${GOPATH}"/bin/gox -osarch="linux/amd64"
 
 echo stop password service
 ssh root@app1 'systemctl stop password'
