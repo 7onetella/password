@@ -10,7 +10,6 @@ Router.map(function() {
   this.route('passwords');
   this.route('passwords/new');
   this.route('passwords/edit', { path: '/passwords/edit/:id'});
-  this.route('about');
   this.route('signin');
 });
 

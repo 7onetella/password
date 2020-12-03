@@ -31,11 +31,11 @@ td.clickable {
     // -moz-box-shadow: 1px 1px 4px 2px #ccc;
     // -webkit-box-shadow: 1px 1px 4px 2px #ccc;
     margin: auto;
-  
+
     &__header {
       font-weight: bold;
     }
-  
+
     &__header-title {
       padding: 5px;
     }
@@ -57,4 +57,9 @@ td.clickable {
     padding-top: 5px;
     padding-bottom: 5px;
 	position: absolute;
+}
+
+#lock_img {
+  width: 32px;
+  margin-left: 9px;
 }
