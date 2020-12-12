@@ -1,5 +1,5 @@
 #!/bin/sh -e
-set +x
+# set +x
 
 echo installing go-bindata-assetfs
 go get -u github.com/go-bindata/go-bindata/...

@@ -3,9 +3,7 @@ FROM node:10-alpine AS node-builder
 RUN npm install -g ember-cli
 WORKDIR /build
 COPY ./ui /build/
-RUN ls -l /build  && \
-    cd /build     && \
-    ./build.sh
+RUN ./build.sh
 
 
 # build go
@@ -14,9 +12,8 @@ WORKDIR /build
 COPY ./api /build/
 RUN mkdir -p /build/ui
 COPY --from=node-builder /build/dist ./build/ui/
-RUN ls -l /build  && \
-    cd /build     && \
-    ./build.sh   
+RUN ./build.sh   
+
 
 # ship
 FROM alpine:3.12.2
