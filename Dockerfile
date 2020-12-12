@@ -20,6 +20,6 @@ RUN ls -l /build  && \
 
 # ship
 FROM alpine:3.12.2
-COPY --from=go-builder /build/dist/password_linux_amd64/password /password
+COPY --from=go-builder /build/api_linux_amd64 /password
 RUN chmod +x /password
 CMD [ "/password" ]
