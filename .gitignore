@@ -3,3 +3,4 @@ config.yml
 .idea
 github_release.sh
 api/password
+*.app
