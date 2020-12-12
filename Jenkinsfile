@@ -14,7 +14,7 @@ pipeline {
 
       }
       steps {
-        sh 'docker build -t password .'
+        sh 'echo hello world'
       }
     }
 
