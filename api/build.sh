@@ -1,17 +1,18 @@
-#!/bin/sh
+#!/bin/sh -e
 set +x
 
-echo generate go asset .go file
+echo installing go-bindata-assetfs
 go get -u github.com/go-bindata/go-bindata/...
 go get -u github.com/elazarl/go-bindata-assetfs/...
+
+echo generate go asset .go file
 go-bindata-assetfs ui/...
 
 go build ./...
 
-# get gox for cross compilation
+echo installing gox
 go get -u github.com/mitchellh/gox
 
-# ${GOPATH}/bin/gox -osarch="linux/arm linux/amd64"
 echo cross compile
 "${GOPATH}"/bin/gox -osarch="linux/amd64"
 
