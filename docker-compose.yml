@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    image: test-db
+    container_name: test-db
+    build: ./db
+    restart: always
+    environment:
+      - POSTGRES_USER=dev
+      - POSTGRES_PASSWORD=dev114
+      - POSTGRES_DB=devdb
+  web:
+    image: password
+    build: .
+    depends_on:
+      - db
+    container_name: password
+    restart: always
+    environment:
+      - STAGE=devpass
+      - HTTP_PORT=8080
+      - DB_CONNSTR=postgres://dev:dev114@localhost:5432/devdb
+      - CRYPTO_TOKEN=test
+      - CREDENTIAL=user1:password1234
+    ports:
+      - "8080:8080"
