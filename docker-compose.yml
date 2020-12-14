@@ -9,6 +9,8 @@ services:
       - POSTGRES_USER=dev
       - POSTGRES_PASSWORD=dev114
       - POSTGRES_DB=devdb
+    ports:
+      - "5432:5432"
   web:
     image: password
     build: .
@@ -19,7 +21,7 @@ services:
     environment:
       - STAGE=devpass
       - HTTP_PORT=8080
-      - DB_CONNSTR=postgres://dev:dev114@localhost:5432/devdb
+      - DB_CONNSTR=postgres://dev:dev114@test-db:5432/devdb?sslmode=disable
       - CRYPTO_TOKEN=test
       - CREDENTIAL=user1:password1234
     ports:
