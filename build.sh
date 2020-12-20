@@ -1,11 +1,23 @@
 #!/bin/bash
 
-version=$(cat version | awk '{$1=$1;print}' | tail +1)
+cd ui
 
-docker build -t password .
+./build.sh
 
-docker tag password:latest docker-registry.7onetella.net:5000/7onetella/password:"${version}"
+cd ../api
 
-docker push docker-registry.7onetella.net:5000/7onetella/password:"${version}"
+echo copying the emberjs asset from ui/dist/*
+mkdir -p ui/
+cp -r ../ui/dist/* ./ui/
 
-vag docker deploy password-dev:"${version}"
+./build.sh
+
+# version=$(cat version | awk '{$1=$1;print}' | tail +1)
+
+# docker build -t password .
+
+# docker tag password:latest docker-registry.7onetella.net:5000/7onetella/password:"${version}"
+
+# docker push docker-registry.7onetella.net:5000/7onetella/password:"${version}"
+
+# vag docker deploy password-dev:"${version}"
