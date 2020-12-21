@@ -10,4 +10,6 @@ docker build -t "${image}" .
 
 docker push "${image}"
 
+cd ..
+
 vag docker deploy password-dev:"${version}"
